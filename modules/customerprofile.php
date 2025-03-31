@@ -1,9 +1,9 @@
 <?php 
-require 'base.php'; 
-require 'header.php'; 
+require '../base.php';
+include '../header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    redirect('/module/memberlogin.php');
+    redirect('../modules/memberlogin.php');
 }
 
 $user_id = $_SESSION['user_id'];
@@ -154,4 +154,5 @@ if (is_post()){
     </div>
 </main>
 
-<?php require '../module/footer.php'; ?>
+<?php
+include 'footer.php';

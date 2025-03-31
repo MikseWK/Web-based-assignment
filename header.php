@@ -4,25 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_title ?? 'Frosty Delights' ?></title>
-    <link rel="shortcut icon" href="/Images/favicon.ico">
-    <link rel="stylesheet" href="/css/css.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="/js/app.js"></script>
+    <?php
+    // Determine if we're in a subdirectory
+    $base_path = dirname($_SERVER['PHP_SELF']) == '/modules' ? '../' : '';
+    ?>
+    <link rel="shortcut icon" href="<?= $base_path ?>Images/favicon.ico">
+    <link rel="stylesheet" href="<?= $base_path ?>css/css.css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="<?= $base_path ?>js/app.js"></script> -->
 </head>
 <body>
 
-    <header>
+<header>
       <nav>
-        <a href="/"><img src="/Images/logo.png" id="logo"></a>
-        <a href="/">Home</a>
-        <a href="/module/product.php">Product</a>
-        <a href="/module/location.php">Where's us</a>
-        <a href="/module/aboutus.php">About us</a>
-        <a href="/module/switchRole.php" class="loginIcon"><img src="/Images/loginIcon.png" ></a>
+        <a href="<?= $base_path ?>index.php"><img src="<?= $base_path ?>Images/logo.png" id="logo"></a>
+        <a href="<?= $base_path ?>index.php">Home</a>
+        <a href="<?= $base_path ?>modules/product.php">Product</a>
+        <a href="<?= $base_path ?>modules/location.php">Where's us</a>
+        <a href="<?= $base_path ?>modules/aboutus.php">About us</a>
+        <a href="<?= $base_path ?>modules/switchrole.php" class="loginIcon"><img src="<?= $base_path ?>Images/loginIcon.png"></a>
      </nav>
     </header>
-
-
 
     <main>
         <h1><?= $_title ?? 'Frosty Delights' ?></h1>

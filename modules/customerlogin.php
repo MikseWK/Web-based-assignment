@@ -1,5 +1,6 @@
 <?php
-include '_base.php';
+require '../base.php';
+include '../header.php';
 
 // ----------------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ if (is_post()) {
             $_SESSION['logged_in'] = true;
             
             // Redirect to home page or dashboard
-            header('Location: /index.php');
+            header('index.php');
             exit;
         }
         else {
@@ -51,13 +52,13 @@ if (is_post()) {
 // ----------------------------------------------------------------------------
 
 $_title = 'Login';
-include '_head.php';
+
 ?>
+<link rel="stylesheet" href="../css/login.css">
 
 <div class="login-container">
     <div class="login-banner">
-        <img src="/assets/images/login-banner.png" alt="Login Banner" 
-        onerror="this.src='https://via.placeholder.com/400x300?text=4.4+Sale'">
+        <img src="/assets/images/loginIcon" alt="Login Banner" >
     </div>
 
     <div class="login-form-container">
@@ -106,7 +107,7 @@ include '_head.php';
 </div>
 
 <?php
-include '_foot.php';
+include 'footer.php';
 
 
 

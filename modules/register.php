@@ -1,5 +1,5 @@
 <?php
-require '../base.php';
+include '../base.php';
 
 if (is_post()) {
     $email = trim($_POST['email']);
@@ -71,7 +71,7 @@ include '../header.php';
     <button type="submit">Sign Up</button>
 </form>
 
-<p id="signup">Already have an account? <a href="/module/memberlogin.php">Log In</a></p>
+<p id="signup">Already have an account? <a href="/modules/customerlogin.php">Log In</a></p>
 
 <?php
 include '../footer.php';
