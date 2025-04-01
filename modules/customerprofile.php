@@ -2,16 +2,15 @@
 require '../base.php';
 include '../header.php';
 
-if (!isset($_SESSION['user_id'])) {
+if (!$_user) {
     redirect('../modules/customerlogin.php');
 }
 
-$user_id = $_SESSION['user_id'];
 $error = '';
 
 // Change 'users' to 'customer' and update column names to match your database structure
 $stmt = $_db->prepare('SELECT id, email, password, profile_picture FROM customer WHERE id = ?');
-$stmt->execute([$user_id]);
+$stmt->execute([$_user->id]);
 $user = $stmt->fetch();
 
 if (is_post()){

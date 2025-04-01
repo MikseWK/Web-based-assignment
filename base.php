@@ -48,6 +48,22 @@ function redirect($url = null) {
 function is_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false; 
 }
+
+// Generate table headers <th>
+function table_headers($fields, $sort, $dir, $href = '') {
+    foreach ($fields as $k => $v) {
+        $d = 'asc'; // Default direction
+        $c = '';    // Default class
+        
+        if ($k == $sort) {
+            $d = $dir == 'asc' ? 'desc' : 'asc';
+            $c = $dir;
+        }
+
+        echo "<th><a href='?sort=$k&dir=$d&$href' class='$c'>$v</a></th>";
+    }
+}
+
 //Error
 //Global error array
 $_err = [];
@@ -68,16 +84,16 @@ function logout($url){
     redirect($url ?? '/index.php');
 }
 
+//Verify is admin
+function isAdmin(): bool{
+    return isset($_SESSION['role']) && $_SESSION['role'] == 'Admin';
+}
+
 // Authorization
 function auth(...$roles){
     global $_user;
     if ($_user) {
-        if ($roles) {
-            if (in_array($_user->role, $roles)){
-                return;
-            }
-        }
-        else {
+        if (in_array($_SESSION['role'], $roles)){
             return;
         }
     }

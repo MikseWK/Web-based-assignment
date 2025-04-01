@@ -1,6 +1,5 @@
 <?php
 require '../base.php';
-include '../header.php';
 
 // ----------------------------------------------------------------------------
 
@@ -31,8 +30,9 @@ if (is_post()) {
         $u = $stm->fetch();
 
         if ($u) {
-            login($u,'');
-            $_user->role = 'Customer';
+            $_SESSION['role'] = 'Customer';
+            $_SESSION['logged_in'] = true;
+            login($u,'/index.php');
         }
         else {
             $_err['password'] = 'Email or password not matched';
@@ -54,6 +54,25 @@ $_title = 'Login';
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <header>
+        <div class="logo">
+            <a href="/index.php">
+                <img src="/images/logo.png" alt="Frost Delights Logo">
+            </a>
+        </div>
+
+        <div class="dropdown">
+                    <div class="profile-pic-container">
+                        <img src="/assets/images/user-icon.png" alt="Login" class="profile-pic">
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="/modules/customerlogin.php">Customer Login</a>
+                        <a href="/modules/adminlogin.php">Admin Login</a>
+                        <a href="/modules/register.php">Register</a>
+                    </div>
+                </div>
+    </header>
+
     <div class="login-container">
         <!-- <div class="login-banner">
             <img src="../assets/images/login-icon.png" alt="Login Banner">

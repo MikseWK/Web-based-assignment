@@ -16,25 +16,33 @@
 
     <header>
         <div class="logo">
-            <a href="/index.php">
+            <a href="<?php isAdmin() ? '/modules/adminPage.php' : '/index.php'; ?>">
                 <img src="/images/logo.png" alt="Frost Delights Logo">
             </a>
         </div>
         
         <nav>
             <ul class="main-menu">
-                <li><a href="/index.php">Home</a></li>
-                <li><a href="/about.php">About Us</a></li>
-                <li><a href="/menu.php">Menu</a></li>
-                <li><a href="/contact.php">Contact</a></li>
+                <?php if (isAdmin()): ?>
+                    <li><a href="/modules/adminPage.php">Home</a></li>
+                    <li><a href="/modules/memberMain.php">Member</a></li>
+                    <li><a href="/modules/productMain.php">Product</a></li>
+                    <li><a href="/modules/orderMain.php">Order</a></li>
+                <?php else: ?>
+                    <li><a href="/index.php">Home</a></li>
+                    <li><a href="/about.php">About Us</a></li>
+                    <li><a href="/menu.php">Menu</a></li>
+                    <li><a href="/contact.php">Contact</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
         
         <div class="user-profile">
-            <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+            <?php if ($_user): ?>
                 <!-- User is logged in -->
                 <div class="dropdown">
                     <div class="profile-pic-container">
+                        <!-- Need change -->
                         <?php if (isset($_SESSION['profile_picture']) && $_SESSION['profile_picture']): ?>
                             <img src="/<?= $_SESSION['profile_picture'] ?>" alt="Profile" class="profile-pic">
                         <?php else: ?>
@@ -42,13 +50,13 @@
                         <?php endif; ?>
                     </div>
                     <div class="dropdown-content">
-                        <span class="user-email"><?= $_SESSION['user_email'] ?></span>
-                        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
-                            <a href="/modules/adminprofile.php">Admin Dashboard</a>
+                        <span class="user-email"><?= $_user->email ?></span>
+                        <?php if (isAdmin()): ?>
+                            <a href="/modules/adminProfile.php">Admin Dashboard</a>
                         <?php else: ?>
                             <a href="/modules/customerprofile.php">My Profile</a>
+                            <a href="/modules/orders.php">My Orders</a>
                         <?php endif; ?>
-                        <a href="/modules/orders.php">My Orders</a>
                         <!-- In the dropdown menu for logged-in users -->
                         <a href="/modules/logout.php">Logout</a>
                     </div>
