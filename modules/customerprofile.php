@@ -3,27 +3,27 @@ require '../base.php';
 include '../header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    redirect('../modules/memberlogin.php');
+    redirect('../modules/customerlogin.php');
 }
 
 $user_id = $_SESSION['user_id'];
 $error = '';
 
-$stmt = $_db -> prepare('SELECT name, email, phone, profile_picture FROM users WHERE id = ?');
-$stmt-> execute([$user_id]);
+// Change 'users' to 'member' and update column names to match your database structure
+$stmt = $_db->prepare('SELECT id, emailAddress, password, profile_picture FROM member WHERE id = ?');
+$stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
 if (is_post()){
     if (isset($_POST['update_profile'])){
-        $name = post('name');
         $email = post('email');
-        $phone = post('phone');
-
+        
         if(!is_email($email)){
             $error = 'Invalid email';
         } else {
-            $stmt = $_db -> prepare('UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?');
-            $stmt-> execute([$name, $email, $phone, $user_id]);
+            // Update query to match your table structure
+            $stmt = $_db->prepare('UPDATE member SET emailAddress = ? WHERE id = ?');
+            $stmt->execute([$email, $user_id]);
             redirect();
         }
     }
@@ -65,6 +65,9 @@ if (is_post()){
     }
 }
 ?>
+
+
+<link rel="stylesheet" href="../css/style.css">
 
 <div class="container mt-4">
     <div class="row">
@@ -115,7 +118,7 @@ if (is_post()){
         <?php endif; ?>
 
         <div class="profile-image-container">
-            <img src="/<?= $user->profile_picture ?: 'Images/default-profile.png' ?>" class="profile-image">
+            <img src="/<?= $user->profile_picture ?: 'images/default-profile.png' ?>" class="profile-image">
         </div>
 
         <form method="POST" class="profile-form">

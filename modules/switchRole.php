@@ -2,7 +2,7 @@
 require '../base.php';
 include '../header.php';
 ?>
-
+<link rel="stylesheet" href="../css/style.css">
 <!-- Your switchrole content here -->
 <div class="container">
     <div class="row">

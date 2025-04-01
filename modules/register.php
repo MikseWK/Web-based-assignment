@@ -33,7 +33,7 @@ if (is_post()) {
         $stm = $_db->prepare('INSERT INTO member (emailAddress, password) VALUES (?, ?)');
 
         if ($stm->execute([$email, $hashed_password])) {
-            header('Location: memberLogin.php'); 
+            header('Location: customerlogin.php'); 
             exit();
         } else {
             $_err['db'] = 'Database error. Please try again.';
@@ -41,38 +41,61 @@ if (is_post()) {
     }
 }
 
-$_title = 'SignUp';
+$_title = 'Sign Up';
 include '../header.php';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $_title ?></title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form-container">
+            <div class="login-tabs">
+                <div class="login-tab-active">Sign Up</div>
+            </div>
 
-<h1 class="signUpTitle">Sign Up</h1>
+            <form method="POST">
+                <input type="email" name="email" class="login-input" placeholder="Email" 
+                value="<?= isset($email) ? htmlspecialchars($email) : ''; ?>">
+                <?php if(isset($_err['email'])): ?>
+                    <div class="error-message"><?= $_err['email']?></div>
+                <?php endif; ?>
+                
+                <input type="password" name="password" class="login-input" placeholder="Password">
+                <?php if (isset($_err['password'])): ?>
+                    <div class="error-message"><?= $_err['password'] ?></div>
+                <?php endif; ?>
 
-<form method="post" class="signUp">
-    <div class="label-container">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="<?= isset($email) ? htmlspecialchars($email) : ''; ?>">
-        <?php if (isset($_err['email'])): ?>
-            <div class="error"><?= $_err['email']; ?></div>
-        <?php endif; ?>
+                <?php if (isset($_err['db'])): ?>
+                    <div class="error-message"><?= $_err['db']; ?></div>
+                <?php endif; ?>
+
+                <button type="submit" class="login-button">Sign Up</button>
+                
+                <div class="login-divider">OR</div>
+                
+                <div class="social-login">
+                    <button type="button" class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
+                        Facebook
+                    </button>
+                    <button type="button" class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+                        Google
+                    </button>
+                </div>
+                
+                <div class="signup-link">
+                    Already have an account? <a href="customerlogin.php">Log In</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="label-container">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <?php if (isset($_err['password'])): ?>
-            <div class="error"><?= $_err['password']; ?></div>
-        <?php endif; ?>
-    </div>
-
-    <?php if (isset($_err['db'])): ?>
-        <div class="error"><?= $_err['db']; ?></div>
-    <?php endif; ?>
-
-    <button type="submit">Sign Up</button>
-</form>
-
-<p id="signup">Already have an account? <a href="/modules/customerlogin.php">Log In</a></p>
-
-<?php
-include '../footer.php';
-?>
+    <?php include '../footer.php'; ?>
+</body>
+</html>

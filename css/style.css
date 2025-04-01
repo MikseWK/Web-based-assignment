@@ -1,0 +1,602 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFDD0;
+}
+
+#logo {
+    padding-top: 10px;
+    margin: 0;
+    width: 140px;
+    height: 80px;
+    background-position: left 50px right 20px;
+}
+
+img{
+    display: flex;
+    width: 40px;
+    height: 40px;
+}
+main{
+    flex: 1;
+}
+
+header{
+    padding: 10px 20px ;
+    background-color: #E0F7FA;
+    color: #038A98;
+}
+
+footer {
+    background: #E0F7FA;
+    color: #038A98;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    background-color: #E0F7FA; 
+    border-bottom: 1px solid #ddd; 
+    justify-items: center;
+}
+
+nav a {
+    text-decoration: none; 
+    color: #038A98; 
+    font-size: 25px;
+    margin: 0 10px;
+    transition: color 0.3s ease; 
+}
+
+nav a:hover {
+    color: #007BFF; 
+}
+
+nav a.loginIcon {
+    margin-left: auto;
+}
+
+nav a.loginIcon img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease; 
+}
+
+nav a.loginIcon:hover img {
+    transform: scale(1.1);
+}
+
+.container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 100%;
+}
+
+.switchRole {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    background-color: white; 
+    padding: 100px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    width: 350px; 
+}
+  
+.switchRole button {
+    display: inline-block;
+    padding: 20px 35px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    width: 100%; 
+    border: none;
+    cursor: pointer; 
+}
+  
+.adminButton {
+    background-color: #4CAF50; 
+}
+  
+.adminButton:hover {
+    background-color: #45a049; 
+}
+  
+ 
+.memberButton {
+    background-color: #008CBA; 
+}
+  
+.memberButton:hover {
+    background-color: #007B9E; 
+}
+
+/* General styles for the login container */
+.memberLoginTitle {
+    text-align: center;
+    font-size: 30px;
+    color: #333;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Login page styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #FFFDD0;
+    padding: 20px;
+}
+
+.login-form-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+}
+
+.login-banner {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-banner img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.login-tabs {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.login-tab-active {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.login-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.login-options a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-options a:hover {
+    text-decoration: underline;
+}
+
+.login-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.login-divider::before {
+    left: 0;
+}
+
+.login-divider::after {
+    right: 0;
+}
+
+.social-login {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.social-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.social-button:hover {
+    background-color: #f5f5f5;
+}
+
+.social-button img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+/* Style for error messages
+.signUp  {
+    color: #ff0000;
+    font-size: 12px;
+    margin-bottom: 10px;
+    align-self: flex-start;
+} */
+
+
+/* Profile page  */
+
+.profile-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.profile-card{
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+}
+
+.profile-header{
+    font-size: 24px;
+    color: #038A98;
+    margin-bottom: 20px;
+
+}
+
+/* Header and profile styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.main-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-menu li {
+    margin: 0 15px;
+}
+
+.main-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.main-menu a:hover {
+    color: #0088cc;
+}
+
+/* Profile dropdown styles */
+.user-profile {
+    position: relative;
+}
+
+.profile-pic-container {
+    cursor: pointer;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f0f0f0;
+    transition: transform 0.2s;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f5f5f5;
+}
+
+.user-email {
+    display: block;
+    padding: 12px 16px;
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Message container styles */
+.message-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.message {
+    padding: 12px 24px;
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    animation: fadeOut 5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Main content styles */
+.main-content {
+    padding: 40px;
+    text-align: center;
+}
+
+.hero-section {
+    background-color: #FFFDD0;
+    padding: 60px 20px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+
+.hero-section h1 {
+    font-size: 36px;
+    color: #333;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.cta-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+/* Featured products styles */
+.featured-products {
+    margin-top: 40px;
+}
+
+.featured-products h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.product-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-item {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+.product-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.product-item h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+/* Footer styles */
+.main-footer {
+    background-color: #E0F7FA;
+    text-align: center;
+    padding: 20px;
+    color: #038A98;
+}
+
+/* Animation styles */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 2s forwards;
+}
+
+.slide-up {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideUp 1s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Navigation link styles */
+.nav-link {
+    transition: color 0.3s, transform 0.3s;
+}
+
+.nav-link:hover {
+    color: #007BFF;
+    transform: scale(1.1);
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #038A98;
+    transition: transform 0.3s ease;
+}
+
+.profile-icon:hover {
+    transform: scale(1.1);
+}
+
+.login-icon {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease;
+}
+
+.login-icon:hover {
+    transform: scale(1.1);
+}
+
