@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2025 at 11:31 AM
+-- Generation Time: Apr 01, 2025 at 12:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,7 +44,7 @@ CREATE TABLE `addon` (
 CREATE TABLE `admin` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
-  `password` varchar(15) NOT NULL,
+  `password` text NOT NULL,
   `phoneNumber` text NOT NULL,
   `email` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -54,7 +54,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `name`, `password`, `phoneNumber`, `email`) VALUES
-(1, 'Ong', 'dd5fef9c1c1da13', '01111111111', 'h@gmail.com');
+(1, 'Ong', 'dd5fef9c1c1da1394d6d34b248c51be2ad740840', '01111111111', 'h@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,7 @@ INSERT INTO `admin` (`id`, `name`, `password`, `phoneNumber`, `email`) VALUES
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
-  `password` varchar(15) NOT NULL,
+  `password` text NOT NULL,
   `phoneNumber` text NOT NULL,
   `email` text NOT NULL,
   `birthday` date NOT NULL
@@ -76,7 +76,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `name`, `password`, `phoneNumber`, `email`, `birthday`) VALUES
-(1, 'Ong', 'dd5fef9c1c1da13', '01111111111', 'h@gmail.com', '2005-04-09');
+(1, 'Ong', 'dd5fef9c1c1da1394d6d34b248c51be2ad740840', '01111111111', 'h@gmail.com', '2005-04-09');
 
 -- --------------------------------------------------------
 
