@@ -17,7 +17,7 @@
     <header>
         <div class="logo">
             <a href="/index.php">
-                <img src="/assets/images/logo.png" alt="Frost Delights Logo">
+                <img src="/images/logo.png" alt="Frost Delights Logo">
             </a>
         </div>
         

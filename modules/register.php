@@ -12,7 +12,7 @@ if (is_post()) {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_err['email'] = 'Invalid email format';
     } else {
-        $stm = $_db->prepare('SELECT COUNT(*) FROM member WHERE emailAddress = ?');
+        $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
         $stm->execute([$email]);
 
         if ($stm->fetchColumn() > 0) {
@@ -30,7 +30,7 @@ if (is_post()) {
     // If no errors, insert into database
     if (empty($_err)) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash password
-        $stm = $_db->prepare('INSERT INTO member (emailAddress, password) VALUES (?, ?)');
+        $stm = $_db->prepare('INSERT INTO customer (email, password) VALUES (?, ?)');
 
         if ($stm->execute([$email, $hashed_password])) {
             header('Location: customerlogin.php'); 

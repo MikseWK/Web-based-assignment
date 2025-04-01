@@ -48,8 +48,44 @@ function redirect($url = null) {
 function is_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false; 
 }
+//Error
+//Global error array
+$_err = [];
 
-//database for member signup and login
-$_db = new PDO('mysql:dbname=member', 'root', '', [
+//Security
+//Global user object
+$_user = $_SESSION['user'] ?? null;
+
+//Login user
+function login($user, $url){
+    $_SESSION['user'] = $user;
+    redirect($url ?? '/index.php');
+}
+
+//Logout user
+function logout($url){
+    unset($_SESSION['user']);
+    redirect($url ?? '/index.php');
+}
+
+// Authorization
+function auth(...$roles){
+    global $_user;
+    if ($_user) {
+        if ($roles) {
+            if (in_array($_user->role, $roles)){
+                return;
+            }
+        }
+        else {
+            return;
+        }
+    }
+
+    redirect('/switchRole.php');
+}
+
+//database for customer signup and login
+$_db = new PDO('mysql:dbname=assignment', 'root', '', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 ]);

@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $error = '';
 
-// Change 'users' to 'member' and update column names to match your database structure
-$stmt = $_db->prepare('SELECT id, emailAddress, password, profile_picture FROM member WHERE id = ?');
+// Change 'users' to 'customer' and update column names to match your database structure
+$stmt = $_db->prepare('SELECT id, email, password, profile_picture FROM customer WHERE id = ?');
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
@@ -22,7 +22,7 @@ if (is_post()){
             $error = 'Invalid email';
         } else {
             // Update query to match your table structure
-            $stmt = $_db->prepare('UPDATE member SET emailAddress = ? WHERE id = ?');
+            $stmt = $_db->prepare('UPDATE customer SET email = ? WHERE id = ?');
             $stmt->execute([$email, $user_id]);
             redirect();
         }

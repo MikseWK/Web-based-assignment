@@ -7,7 +7,6 @@ include '../header.php';
 if (is_post()) {
     $email    = req('email');
     $password = req('password');
-    $_err = []; // Initialize $_err array
 
     // Validate: email
     if ($email == '') {
@@ -23,31 +22,17 @@ if (is_post()) {
     }
 
     // Login user
-    if (empty($_err)) {
+    if (!$_err) {
         $stm = $_db->prepare('
-            SELECT * FROM member
-            WHERE emailAddress = ?
+            SELECT * FROM customer
+            WHERE email = ? AND password = SHA1(?)
         ');
-        $stm->execute([$email]);
-        $u = $stm->fetch(PDO::FETCH_ASSOC);
+        $stm->execute([$email, $password]);
+        $u = $stm->fetch();
 
         if ($u) {
-            // Store success message in session
-            $_SESSION['message'] = 'Login successfully';
-            
-            // Store user data in session
-            $_SESSION['user_id'] = $u['id'];
-            $_SESSION['user_email'] = $u['emailAddress'];
-            $_SESSION['logged_in'] = true;
-            
-            // Store profile picture if available
-            if (isset($u['profile_picture'])) {
-                $_SESSION['profile_picture'] = $u['profile_picture'];
-            }
-            
-            // Redirect to home page or dashboard
-            header('Location: ../index.php');
-            exit;
+            login($u,'');
+            $_user->role = 'Customer';
         }
         else {
             $_err['password'] = 'Email or password not matched';
