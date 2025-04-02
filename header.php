@@ -50,10 +50,11 @@
                         <?php endif; ?>
                     </div>
                     <div class="dropdown-content">
-                        <span class="user-email"><?= $_user->email ?></span>
                         <?php if (isAdmin()): ?>
+                            <span class="user-name">Admin <?= $_user->name ?></span>
                             <a href="/modules/adminProfile.php">Admin Dashboard</a>
                         <?php else: ?>
+                            <span class="user-name"><?= $_user->name ?></span>
                             <a href="/modules/customerprofile.php">My Profile</a>
                             <a href="/modules/orders.php">My Orders</a>
                         <?php endif; ?>

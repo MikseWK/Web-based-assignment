@@ -32,6 +32,7 @@ if (is_post()) {
         if ($u) {
             $_SESSION['role'] = 'Admin';
             $_SESSION['logged_in'] = true;
+            $_SESSION['message'] = 'You have logged in successfully';
             login($u,'/modules/adminPage.php');
         }
         else {
@@ -54,6 +55,11 @@ $_title = 'Login';
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="message-container">
+            <div class="message"><?= $_SESSION['message']; unset($_SESSION['message']); ?></div>
+        </div>
+    <?php endif; ?>
     <header>
         <div class="logo">
             <a href="/index.php">

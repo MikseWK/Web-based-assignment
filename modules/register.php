@@ -2,15 +2,27 @@
 include '../base.php';
 
 if (is_post()) {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $_err = [];
+    $name = req('name');
+    $password = req('password');
+    $phoneNumber = req('phoneNumber');
+    $email = req('email');
 
-    // Validate email
+    //Validate: name
+    if ($name == '') {
+        $_err['name'] = 'Name Required';
+    }
+
+    //Validate: phone number
+    if ($phoneNumber == '') {
+        $_err['phoneNumber'] = 'Phone Number Required';
+    }
+
+    // Validate: email
     if ($email == '') {
-        $_err['email'] = 'Required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $_err['email'] = 'Invalid email format';
+        $_err['email'] = 'Email Required';
+    }
+    else if (!is_email($email)) {
+        $_err['email'] = 'Invalid email';
     } else {
         $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
         $stm->execute([$email]);
@@ -20,7 +32,7 @@ if (is_post()) {
         }
     }
 
-    // Validate password
+    // Validate: password
     if ($password == '') {
         $_err['password'] = 'Required';
     } elseif (!preg_match('/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/', $password)) {
@@ -28,13 +40,12 @@ if (is_post()) {
     }
 
     // If no errors, insert into database
-    if (empty($_err)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash password
-        $stm = $_db->prepare('INSERT INTO customer (email, password) VALUES (?, ?)');
+    if (!$_err) {
+        $stm = $_db->prepare('INSERT INTO customer (name, password, phoneNumber, email) VALUES (?, SHA1(?), ?, ?)');
 
-        if ($stm->execute([$email, $hashed_password])) {
-            header('Location: customerlogin.php'); 
-            exit();
+        if ($stm->execute([$name, $password, $phoneNumber, $email])) {
+            $_SESSION['message'] = 'You have registered successfully';
+            redirect('/modules/customerlogin.php');
         } else {
             $_err['db'] = 'Database error. Please try again.';
         }
@@ -42,7 +53,6 @@ if (is_post()) {
 }
 
 $_title = 'Sign Up';
-include '../header.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,6 +63,31 @@ include '../header.php';
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="message-container">
+            <div class="message"><?= $_SESSION['message']; unset($_SESSION['message']); ?></div>
+        </div>
+    <?php endif; ?>
+
+    <header>
+        <div class="logo">
+            <a href="/index.php">
+                <img src="/images/logo.png" alt="Frost Delights Logo">
+            </a>
+        </div>
+
+        <div class="dropdown">
+                    <div class="profile-pic-container">
+                        <img src="/assets/images/user-icon.png" alt="Login" class="profile-pic">
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="/modules/customerlogin.php">Customer Login</a>
+                        <a href="/modules/adminlogin.php">Admin Login</a>
+                        <a href="/modules/register.php">Register</a>
+                    </div>
+                </div>
+    </header>
+
     <div class="login-container">
         <div class="login-form-container">
             <div class="login-tabs">
@@ -60,6 +95,16 @@ include '../header.php';
             </div>
 
             <form method="POST">
+                <input type="name" name="name" class="login-input" placeholder="Name"
+                value="<?= isset($name) ? htmlspecialchars($name) : ''; ?>">
+                <?php if (isset($_err['name'])): ?>
+                    <div class="error-message"><?= $_err['name'] ?></div>
+                <?php endif; ?>
+                <input type="phoneNumber" name="phoneNumber" class="login-input" placeholder="PhoneNumber"
+                value="<?= isset($phoneNumber) ? htmlspecialchars($phoneNumber) : ''; ?>">
+                <?php if (isset($_err['phoneNumber'])): ?>
+                    <div class="error-message"><?= $_err['phoneNumber'] ?></div>
+                <?php endif; ?>
                 <input type="email" name="email" class="login-input" placeholder="Email" 
                 value="<?= isset($email) ? htmlspecialchars($email) : ''; ?>">
                 <?php if(isset($_err['email'])): ?>

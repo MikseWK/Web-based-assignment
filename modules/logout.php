@@ -12,11 +12,4 @@ session_destroy();
 session_start();
 $_SESSION['message'] = 'You have been logged out successfully';
 logout('/index.php');
-// Redirect based on previous role
-// if ($isAdmin) {
-//     header('Location: adminlogin.php');
-// } else {
-//     header('Location: customerlogin.php');
-// }
-//exit;
 ?>

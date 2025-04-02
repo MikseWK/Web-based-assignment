@@ -9,15 +9,22 @@ if (is_post()) {
 
     // Validate: email
     if ($email == '') {
-        $_err['email'] = 'Required';
+        $_err['email'] = 'Email Required';
     }
     else if (!is_email($email)) {
         $_err['email'] = 'Invalid email';
+    } else {
+        $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
+        $stm->execute([$email]);
+
+        if ($stm->fetchColumn() == 0) {
+            $_err['email'] = 'Email not registered';
+        }
     }
 
     // Validate: password
     if ($password == '') {
-        $_err['password'] = 'Required';
+        $_err['password'] = 'Password Required';
     }
 
     // Login user
@@ -32,6 +39,7 @@ if (is_post()) {
         if ($u) {
             $_SESSION['role'] = 'Customer';
             $_SESSION['logged_in'] = true;
+            $_SESSION['message'] = 'You have logged in successfully';
             login($u,'/index.php');
         }
         else {
@@ -54,6 +62,11 @@ $_title = 'Login';
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="message-container">
+            <div class="message"><?= $_SESSION['message']; unset($_SESSION['message']); ?></div>
+        </div>
+    <?php endif; ?>
     <header>
         <div class="logo">
             <a href="/index.php">
