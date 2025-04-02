@@ -1,29 +1,28 @@
 <?php 
-require 'base.php'; 
-require 'header.php'; 
+require '../base.php';
+include '../header.php';
 
-if (!isset($_SESSION['user_id'])) {
-    redirect('/module/login.php');
+if (!$_user) {
+    redirect('../modules/customerlogin.php');
 }
 
-$user_id = $_SESSION['user_id'];
 $error = '';
 
-$stmt = $_db -> prepare('SELECT name, email, phone, profile_picture FROM users WHERE id = ?');
-$stmt-> execute([$user_id]);
+// Change 'users' to 'customer' and update column names to match your database structure
+$stmt = $_db->prepare('SELECT id, email, password, profile_picture FROM customer WHERE id = ?');
+$stmt->execute([$_user->id]);
 $user = $stmt->fetch();
 
 if (is_post()){
     if (isset($_POST['update_profile'])){
-        $name = post('name');
         $email = post('email');
-        $phone = post('phone');
-
+        
         if(!is_email($email)){
             $error = 'Invalid email';
         } else {
-            $stmt = $_db -> prepare('UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?');
-            $stmt-> execute([$name, $email, $phone, $user_id]);
+            // Update query to match your table structure
+            $stmt = $_db->prepare('UPDATE customer SET email = ? WHERE id = ?');
+            $stmt->execute([$email, $user_id]);
             redirect();
         }
     }
@@ -66,6 +65,50 @@ if (is_post()){
 }
 ?>
 
+
+<link rel="stylesheet" href="../css/style.css">
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+           <div class="text-center">
+             <div class="rounded-circle bg-light d-inline-flex justify-content-center
+                         align-items-center " style="width: 150px; height: 150px;">
+                          <?php if ($user->profile_picture):?>
+                            <img src="/<?= encode ($user->profile_picture)?>" class="rounded-circle" alt="Profile Picture" 
+                            style="width: 150px; height: 150px; object-fit: cover;">
+                          <?php else: ?>
+                            <i class="fas fa-user fa-5x text-secondary"></i>
+                          <?php endif; ?>
+           </div>
+           <h5 class="mt-2"><?= encode($user->name)?></h5>
+        </div>
+
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action active">
+                <i class="fas fa-user mr-2"></i>My Account
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-address-card mr-2"></i> Profile
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-credit-card mr-2"></i> Banks & Cards
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Addresses
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-key mr-2"></i> Change Password
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-bell mr-2"></i> Notification Settings
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <i class="fas fa-shield-alt mr-2"></i> Privacy Settings
+                </a>
+        </div>
+</div>
+
 <main class="profile-container">
     <div class="profile-card">
         <h1 class="profile-header">User Profile</h1>
@@ -74,7 +117,7 @@ if (is_post()){
         <?php endif; ?>
 
         <div class="profile-image-container">
-            <img src="/<?= $user->profile_picture ?: 'Images/default-profile.png' ?>" class="profile-image">
+            <img src="/<?= $user->profile_picture ?: 'images/default-profile.png' ?>" class="profile-image">
         </div>
 
         <form method="POST" class="profile-form">
@@ -113,4 +156,5 @@ if (is_post()){
     </div>
 </main>
 
-<?php require '../module/footer.php'; ?>
+<?php
+include 'footer.php';

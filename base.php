@@ -49,7 +49,59 @@ function is_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false; 
 }
 
-//database for member signup and login
-$_db = new PDO('mysql:dbname=member', 'root', '', [
+// Generate table headers <th>
+function table_headers($fields, $sort, $dir, $href = '') {
+    foreach ($fields as $k => $v) {
+        $d = 'asc'; // Default direction
+        $c = '';    // Default class
+        
+        if ($k == $sort) {
+            $d = $dir == 'asc' ? 'desc' : 'asc';
+            $c = $dir;
+        }
+
+        echo "<th><a href='?sort=$k&dir=$d&$href' class='$c'>$v</a></th>";
+    }
+}
+
+//Error
+//Global error array
+$_err = [];
+
+//Security
+//Global user object
+$_user = $_SESSION['user'] ?? null;
+
+//Login user
+function login($user, $url){
+    $_SESSION['user'] = $user;
+    redirect($url ?? '/index.php');
+}
+
+//Logout user
+function logout($url){
+    unset($_SESSION['user']);
+    redirect($url ?? '/index.php');
+}
+
+//Verify is admin
+function isAdmin(): bool{
+    return isset($_SESSION['role']) && $_SESSION['role'] == 'Admin';
+}
+
+// Authorization
+function auth(...$roles){
+    global $_user;
+    if ($_user) {
+        if (in_array($_SESSION['role'], $roles)){
+            return;
+        }
+    }
+
+    redirect('/switchRole.php');
+}
+
+//database for customer signup and login
+$_db = new PDO('mysql:dbname=assignment', 'root', '', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
 ]);

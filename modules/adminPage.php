@@ -1,10 +1,6 @@
 <?php
-require 'base.php';
-
-
-
-
-include 'header.php';
+require '../base.php';
+include '../header.php';
 ?>
 
 
@@ -51,4 +47,4 @@ include 'header.php';
 </html>
 
 <?php
-include 'footer.php';
+include '../footer.php';
