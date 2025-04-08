@@ -626,6 +626,62 @@ header {
 
 }
 
+nav.pager {
+    justify-content: center;
+    margin: auto;
+}
+
+.pagination {
+    text-align: center;
+    margin: 15px auto;
+}
+
+/* Table */
+.table {
+    width: 90%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+.table th, .table td {
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.table th {
+    color: #000;
+    background: #E0F7FA;
+    padding: 12px 15px;
+}
+
+.table tr:hover td {
+    background: #ccc;
+}
+
+/* Sorting */
+.table th a {
+    color: inherit;
+    display: block;
+}
+
+.table th a.asc::after {
+    content: ' ▴';
+}
+
+.table th a.desc::after {
+    content: ' ▾';
+}
+
+.table img:hover {
+    transform: scale(2);
+}
+
+.table img:active {
+    position: relative;
+    border: 1px solid #FFF;
+    transform: scale(6);
+}
+
 /* product css */
 
 .product-grid {

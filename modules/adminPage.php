@@ -1,5 +1,8 @@
 <?php
 require '../base.php';
+
+auth('Admin');
+
 include '../header.php';
 ?>
 

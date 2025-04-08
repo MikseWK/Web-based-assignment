@@ -6,6 +6,8 @@ if (!$_user) {
     redirect('../modules/customerlogin.php');
 }
 
+auth('Customer');
+
 $error = '';
 
 // Change 'users' to 'customer' and update column names to match your database structure
