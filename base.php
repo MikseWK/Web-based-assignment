@@ -7,6 +7,9 @@
 date_default_timezone_set('Asia/Kuala_Lumpur');
 session_start();
 
+// Initialize global user object
+$_user = $_SESSION['user'] ?? null;
+
 function is_get() {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
@@ -68,40 +71,75 @@ function table_headers($fields, $sort, $dir, $href = '') {
 //Global error array
 $_err = [];
 
-//Security
-//Global user object
-$_user = $_SESSION['user'] ?? null;
+// Improved user session handling
+// Check if user is logged in
+function is_logged_in() {
+    return isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true;
+}
 
-//Login user
-function login($user, $url){
-    $_SESSION['user'] = $user;
+// Get current user role
+function get_user_role() {
+    return $_SESSION['user_role'] ?? null;
+}
+
+// Check if user is admin
+function is_admin() {
+    return is_logged_in() && get_user_role() === 'admin';
+}
+
+// Check if user is customer
+function is_customer() {
+    return is_logged_in() && get_user_role() === 'customer';
+}
+
+// Login user
+function login($user_id, $name, $role, $url = null) {
+    $_SESSION['logged_in'] = true;
+    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_name'] = $name;
+    $_SESSION['user_role'] = $role;
     redirect($url ?? '/index.php');
 }
 
-//Logout user
-function logout($url){
-    unset($_SESSION['user']);
+// Logout user
+function logout($url = null) {
+    // Clear all session variables
+    $_SESSION = array();
+    
+    // Destroy the session
+    session_destroy();
+    
+    // Start a new session
+    session_start();
+    
     redirect($url ?? '/index.php');
-}
-
-//Verify is admin
-function isAdmin(): bool{
-    return isset($_SESSION['role']) && $_SESSION['role'] == 'Admin';
 }
 
 // Authorization
-function auth(...$roles){
-    global $_user;
-    if ($_user) {
-        if (in_array($_SESSION['role'], $roles)){
-            return;
-        }
+function auth($required_role = null) {
+    if (!is_logged_in()) {
+        $_SESSION['message'] = "You must be logged in to access this page.";
+        redirect('/login.php');
     }
-
-    redirect('/switchRole.php');
+    
+    if ($required_role && get_user_role() !== $required_role) {
+        $_SESSION['message'] = "You don't have permission to access this page.";
+        redirect('/index.php');
+    }
 }
 
 //database for customer signup and login
-$_db = new PDO('mysql:dbname=assignment', 'root', '', [
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-]);
+// $_db = new PDO('mysql:dbname=assignment', 'root', '', [
+//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+// ]);
+// commend the database to test with dummy data
+
+// Database connection
+// try {
+//     $pdo = new PDO('mysql:host=localhost;dbname=assignment', 'root', '', [
+//         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+//         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+//     ]);
+// } catch (PDOException $e) {
+//     die("Database connection failed: " . $e->getMessage());
+// }
