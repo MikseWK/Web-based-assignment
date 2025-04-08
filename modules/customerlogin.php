@@ -9,40 +9,35 @@ if (is_post()) {
 
     // Validate: email
     if ($email == '') {
-        $_err['email'] = 'Email Required';
+        $_err['email'] = 'Required';
     }
     else if (!is_email($email)) {
         $_err['email'] = 'Invalid email';
-    } else {
-        $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
-        $stm->execute([$email]);
-
-        if ($stm->fetchColumn() == 0) {
-            $_err['email'] = 'Email not registered';
-        }
     }
 
     // Validate: password
     if ($password == '') {
-        $_err['password'] = 'Password Required';
+        $_err['password'] = 'Required';
     }
 
-    // Login user
+    // Login user with hard-coded admin credentials
     if (!$_err) {
-        $stm = $_db->prepare('
-            SELECT * FROM customer
-            WHERE email = ? AND password = SHA1(?)
-        ');
-        $stm->execute([$email, $password]);
-        $u = $stm->fetch();
-
-        if ($u) {
-            $_SESSION['role'] = 'Customer';
+        // Hard-coded admin credentials
+        $admin_email = 'abc@gmail.com';
+        $admin_password = 'Abc12345!'; // In production, use a strong password
+        
+        if ($email === $admin_email && $password === $admin_password) {
+            $_SESSION['role'] = 'Admin';
             $_SESSION['logged_in'] = true;
             $_SESSION['message'] = 'You have logged in successfully';
-            login($u,'/index.php');
-        }
-        else {
+            // Create a user object with basic admin info
+            $u = [
+                'id' => 1,
+                'email' => $admin_email,
+                'name' => 'Administrator'
+            ];
+            login($u, '/modules/adminPage.php');
+        } else {
             $_err['password'] = 'Email or password not matched';
         }
     }
@@ -50,7 +45,7 @@ if (is_post()) {
 
 // ----------------------------------------------------------------------------
 
-$_title = 'Login';
+$_title = 'Admin Login';
 
 ?>
 <!DOCTYPE html>
@@ -73,7 +68,7 @@ $_title = 'Login';
                 <img src="/images/logo.png" alt="Frost Delights Logo">
             </a>
         </div>
-
+        
         <div class="dropdown">
                     <div class="profile-pic-container">
                         <img src="/assets/images/user-icon.png" alt="Login" class="profile-pic">
@@ -81,24 +76,18 @@ $_title = 'Login';
                     <div class="dropdown-content">
                         <a href="/modules/customerlogin.php">Customer Login</a>
                         <a href="/modules/adminlogin.php">Admin Login</a>
-                        <a href="/modules/register.php">Register</a>
+                        <!-- Registration link removed -->
                     </div>
                 </div>
     </header>
-
     <div class="login-container">
-        <!-- <div class="login-banner">
-            <img src="../assets/images/login-icon.png" alt="Login Banner">
-        </div> -->
-
         <div class="login-form-container">
             <div class="login-tabs">
-                <div class="login-tab-active">Log In</div>
+                <div class="login-tab-active">Admin Log In</div>
             </div>
 
             <form method="POST">
-                <input type="text" name="email" class="login-input" placeholder="Email " 
-                value="<?= htmlspecialchars(isset($_POST['email']) ? $_POST['email'] : '') ?>">
+                <input type="email" name="email" class="login-input" placeholder="Email" value="<?= htmlspecialchars(isset($_POST['email']) ? $_POST['email'] : '') ?>">
                 <?php if(isset($_err['email'])): ?>
                     <div class="error-message"><?= $_err['email']?></div>
                 <?php endif; ?>
@@ -114,50 +103,11 @@ $_title = 'Login';
                     <a href="#">Forgot Password</a>
                 </div>
                 
-                <div class="login-divider">OR</div>
-                
-                <div class="social-login">
-                    <button type="button" class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" alt="Facebook">
-                        Facebook
-                    </button>
-                    <button type="button" class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
-                        Google
-                    </button>
-                </div>
-                
-                <div class="signup-link">
-                    New to our site? <a href="register.php">Sign Up</a>
-                </div>
+                <!-- Removed OR divider, social login buttons, and signup link -->
             </form>
         </div>
     </div>
-    <?php include '../footer.php'; ?>
 </body>
-</html>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<?php
+include 'footer.php';

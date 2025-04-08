@@ -2,6 +2,8 @@
 require '../base.php';
 include '../header.php';
 
+auth('customer');
+
 if (!$_user) {
     redirect('../modules/customerlogin.php');
 }

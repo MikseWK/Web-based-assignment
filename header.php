@@ -6,6 +6,8 @@
     <title><?= $_title ?? 'Frost Delights' ?></title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- ADD THIS BELOW IF WANT  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <?php if (isset($_SESSION['message'])): ?>
@@ -16,23 +18,23 @@
 
     <header>
         <div class="logo">
-            <a href="<?php isAdmin() ? '/modules/adminPage.php' : '/index.php'; ?>">
+            <a href="<?php echo isset($_SESSION['role']) && $_SESSION['role'] == 'Admin' ? '/modules/adminPage.php' : '/index.php'; ?>">
                 <img src="/images/logo.png" alt="Frost Delights Logo">
             </a>
         </div>
         
         <nav>
             <ul class="main-menu">
-                <?php if (isAdmin()): ?>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
                     <li><a href="/modules/adminPage.php">Home</a></li>
                     <li><a href="/modules/memberMain.php">Member</a></li>
-                    <li><a href="/modules/productMain.php">Product</a></li>
-                    <li><a href="/modules/orderMain.php">Order</a></li>
+                    <li><a href="../modules/productMain.php">Product</a></li>
+                    <li><a href="../modules/orderMain.php">Order</a></li>
                 <?php else: ?>
-                    <li><a href="/index.php">Home</a></li>
-                    <li><a href="/about.php">About Us</a></li>
-                    <li><a href="/menu.php">Menu</a></li>
-                    <li><a href="/contact.php">Contact</a></li>
+                    <li><a href="../index.php">Home</a></li>
+                    <li><a href="../modules/aboutus.php">About Us</a></li>
+                    <li><a href="../modules/menu.php">Menu</a></li>
+                    <li><a href="../modules/contact.php">Contact</a></li>
                 <?php endif; ?>
             </ul>
         </nav>
@@ -50,11 +52,11 @@
                         <?php endif; ?>
                     </div>
                     <div class="dropdown-content">
-                        <?php if (isAdmin()): ?>
-                            <span class="user-name">Admin <?= $_user->name ?></span>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
+                            <span class="user-name">Admin <?= $_user->name ?? 'User' ?></span>
                             <a href="/modules/adminProfile.php">Admin Dashboard</a>
                         <?php else: ?>
-                            <span class="user-name"><?= $_user->name ?></span>
+                            <span class="user-name"><?= $_user->name ?? 'User' ?></span>
                             <a href="/modules/customerprofile.php">My Profile</a>
                             <a href="/modules/orders.php">My Orders</a>
                         <?php endif; ?>
@@ -69,9 +71,8 @@
                         <img src="/assets/images/user-icon.png" alt="Login" class="profile-pic">
                     </div>
                     <div class="dropdown-content">
-                        <a href="/modules/customerlogin.php">Customer Login</a>
+                        <a href="/modules/login.php">Customer Login</a>
                         <a href="/modules/adminlogin.php">Admin Login</a>
-                        <a href="/modules/register.php">Register</a>
                     </div>
                 </div>
             <?php endif; ?>
