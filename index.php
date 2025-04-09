@@ -19,41 +19,41 @@ include 'header.php';
         <h2 class="section-title">Our Signature Flavors</h2>
         <div class="flavors-grid">
             <div class="flavor-card">
-                <img src="assets/images/strawberry.jpg" alt="Strawberry Delight" class="flavor-image">
+                <img src="/images/caketest1.jpeg"class="flavor-image">
                 <div class="flavor-content">
-                    <h3 class="flavor-title">Strawberry Delight</h3>
-                    <p class="flavor-description">Fresh strawberries blended with our premium cream base.</p>
-                    <p class="flavor-price">RM 12.90</p>
+                    <h3 class="flavor-title">Oreo Ice Cream Cake</h3>
+                    <p class="flavor-description">Fresh Oreos blended with our premium cream base.</p>
+                    <p class="flavor-price">RM 9.99</p>
                     <button class="flavor-button">Add to Cart</button>
                 </div>
             </div>
             
             <div class="flavor-card">
-                <img src="assets/images/chocolate.jpg" alt="Double Chocolate" class="flavor-image">
+                <img src="/images/yogurttest2.jpeg"class="flavor-image">
                 <div class="flavor-content">
-                    <h3 class="flavor-title">Double Chocolate</h3>
-                    <p class="flavor-description">Rich chocolate ice cream with chocolate chunks.</p>
-                    <p class="flavor-price">RM 13.90</p>
+                    <h3 class="flavor-title">Yogurt Ice Cream</h3>
+                    <p class="flavor-description">Rich yogurt ice cream with chocolate chunks.</p>
+                    <p class="flavor-price">RM 5.90</p>
                     <button class="flavor-button">Add to Cart</button>
                 </div>
             </div>
             
             <div class="flavor-card">
-                <img src="assets/images/vanilla.jpg" alt="Madagascar Vanilla" class="flavor-image">
+                <img src="/images/gelatotest3.jpeg"class="flavor-image">
                 <div class="flavor-content">
-                    <h3 class="flavor-title">Madagascar Vanilla</h3>
-                    <p class="flavor-description">Classic vanilla with premium Madagascar beans.</p>
-                    <p class="flavor-price">RM 11.90</p>
+                    <h3 class="flavor-title">Gelato Ice Cream</h3>
+                    <p class="flavor-description">Classic gelato with premium Madagascar beans.</p>
+                    <p class="flavor-price">RM 99.99</p>
                     <button class="flavor-button">Add to Cart</button>
                 </div>
             </div>
             
             <div class="flavor-card">
-                <img src="assets/images/matcha.jpg" alt="Matcha Green Tea" class="flavor-image">
+                <img src="/images/sorbettest4.jpeg"class="flavor-image">
                 <div class="flavor-content">
-                    <h3 class="flavor-title">Matcha Green Tea</h3>
-                    <p class="flavor-description">Authentic Japanese matcha in a creamy base.</p>
-                    <p class="flavor-price">RM 14.90</p>
+                    <h3 class="flavor-title">Sorbet Ice Cream</h3>
+                    <p class="flavor-description">Authentic Sorbet in a creamy base.</p>
+                    <p class="flavor-price">RM2.99</p>
                     <button class="flavor-button">Add to Cart</button>
                 </div>
             </div>
@@ -93,4 +93,3 @@ include 'header.php';
 
 <?php
 include 'footer.php';
-?>

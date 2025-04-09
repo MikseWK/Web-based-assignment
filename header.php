@@ -52,7 +52,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="dropdown-content">
-                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
+                        <?php if (isAdmin()): ?>
                             <span class="user-name">Admin <?= $_user->name ?? 'User' ?></span>
                             <a href="/modules/adminProfile.php">Admin Dashboard</a>
                         <?php else: ?>
@@ -68,7 +68,7 @@
                 <!-- User is not logged in - show role selection -->
                 <div class="dropdown">
                     <div class="profile-pic-container">
-                        <img src="/assets/images/user-icon.png" alt="Login" class="profile-pic">
+                        <img src="/images/loginIcon.png" alt="Login" class="profile-pic">
                     </div>
                     <div class="dropdown-content">
                         <a href="/modules/login.php">Customer Login</a>

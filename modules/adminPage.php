@@ -3,14 +3,6 @@ require '../base.php';
 
 auth('Admin');
 
-
-// Check if user is logged in as admin
-if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'Admin') {
-    $_SESSION['message'] = 'You must be logged in as admin to access this page';
-    header('Location: adminlogin.php');
-    exit;
-}
-
 // Dummy data for dashboard
 $dashboardData = [
     'newClients' => 236,

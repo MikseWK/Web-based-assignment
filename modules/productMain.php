@@ -49,7 +49,7 @@ include '../header.php';
         <td>RM<?= $s->price ?></td>
         <td><img src="/images/<?= $s->photo ?>"></td>
         <td>
-            <button data-get="update.php?id=<?= $s->id ?>">Update</button>
+            <button data-get="productUpdate.php?id=<?= $s->id ?>">Update</button>
             <button data-post="delete.php?id=<?= $s->id ?>">Delete</button>
         </td>
     </tr>
