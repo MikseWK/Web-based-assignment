@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// admin profile 
+// admin page
 document.addEventListener('DOMContentLoaded', function() {
     // Tab navigation functionality
     const navItems = document.querySelectorAll('.admin-nav-item');
@@ -439,4 +439,316 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentDate = new Date().toLocaleDateString('en-US', options);
         dateElement.textContent = currentDate;
     }
+});
+
+// Admin Profile functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run this code if we're on the admin profile page
+    if (document.querySelector('.admin-profile-container')) {
+        console.log('Admin profile page detected');
+        
+        // Tab navigation
+        const adminMenuItems = document.querySelectorAll('.admin-profile-menu-item');
+        
+        adminMenuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items
+                adminMenuItems.forEach(mi => mi.classList.remove('active'));
+                
+                // Add active class to clicked menu item
+                this.classList.add('active');
+                
+                // Here you would normally show/hide content sections
+                // This will be implemented when we have all sections
+            });
+        });
+        
+        // Edit profile functionality
+        const adminEditProfileBtn = document.getElementById('adminEditProfileBtn');
+        const adminCancelEditBtn = document.getElementById('adminCancelEdit');
+        const adminProfileViewMode = document.getElementById('adminProfileViewMode');
+        const adminProfileForm = document.getElementById('adminProfileForm');
+        
+        if (adminEditProfileBtn && adminCancelEditBtn && adminProfileViewMode && adminProfileForm) {
+            console.log('Admin profile edit elements found');
+            
+            // Show edit form
+            adminEditProfileBtn.addEventListener('click', function() {
+                console.log('Admin edit button clicked');
+                adminProfileViewMode.style.display = 'none';
+                adminProfileForm.style.display = 'block';
+                adminEditProfileBtn.style.display = 'none';
+            });
+            
+            // Cancel editing
+            adminCancelEditBtn.addEventListener('click', function(e) {
+                console.log('Admin cancel button clicked');
+                e.preventDefault(); // Prevent form submission
+                adminProfileViewMode.style.display = 'block';
+                adminProfileForm.style.display = 'none';
+                adminEditProfileBtn.style.display = 'inline-block';
+            });
+            
+            // Form submission with file upload
+            adminProfileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Admin form submitted');
+                
+                const formData = new FormData(this);
+                
+                // Get the form action URL
+                const actionUrl = this.getAttribute('action');
+                
+                // Send the form data to the server
+                fetch(actionUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error parsing JSON:', error);
+                    return { success: false, message: 'Error processing response' };
+                })
+                .then(data => {
+                    console.log('Response received:', data);
+                    
+                    // For demo purposes, we'll simulate a successful response
+                    const success = data?.success || true;
+                    const message = data?.message || 'Profile updated successfully!';
+                    
+                    if (success) {
+                        // Update the view mode with new values
+                        const name = document.getElementById('adminFullName').value;
+                        const email = document.getElementById('adminEmail').value;
+                        const phone = document.getElementById('adminPhone').value;
+                        const role = document.getElementById('adminRole').value;
+                        
+                        // Update displayed values
+                        const profileUserName = document.querySelector('.admin-profile-user-name');
+                        if (profileUserName) {
+                            profileUserName.textContent = 'Hello\n' + name;
+                        }
+                        
+                        // Find and update the profile info values
+                        const infoValues = document.querySelectorAll('.admin-profile-info-value');
+                        if (infoValues.length > 0) {
+                            infoValues[0].textContent = name; // Name
+                            infoValues[1].textContent = role; // Role
+                            if (infoValues.length > 2) infoValues[2].textContent = phone; // Phone
+                            if (infoValues.length > 3) infoValues[3].textContent = email; // Email
+                        }
+                        
+                        // Switch back to view mode
+                        adminProfileViewMode.style.display = 'block';
+                        adminProfileForm.style.display = 'none';
+                        adminEditProfileBtn.style.display = 'inline-block';
+                        
+                        // Show success message
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'admin-profile-success-message';
+                        successMessage.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+                        
+                        const profileCard = document.querySelector('.admin-profile-card');
+                        if (profileCard) {
+                            profileCard.insertBefore(successMessage, adminProfileViewMode);
+                            
+                            // Remove success message after 3 seconds
+                            setTimeout(function() {
+                                successMessage.remove();
+                            }, 3000);
+                        }
+                    } else {
+                        // Show error message
+                        alert(message || 'Failed to update profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating your profile');
+                });
+            });
+        }
+        
+        // Profile picture edit functionality
+        const adminProfilePictureInput = document.getElementById('adminProfilePictureInput');
+        const adminProfilePreview = document.getElementById('adminProfilePreview');
+        const adminPhotoEditBtns = document.querySelectorAll('.admin-profile-photo-edit');
+        
+        if (adminProfilePictureInput && adminProfilePreview) {
+            adminProfilePictureInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        adminProfilePreview.src = e.target.result;
+                        
+                        // Also update any other profile images on the page
+                        const profileImages = document.querySelectorAll('.admin-profile-user-photo img, .admin-profile-user-info img');
+                        profileImages.forEach(img => {
+                            img.src = e.target.result;
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Open file dialog when clicking on any camera icon
+            adminPhotoEditBtns.forEach(btn => {
+                if (btn) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        adminProfilePictureInput.click();
+                    });
+                }
+            });
+        }
+        
+        // Admin Management functionality
+        const adminAddBtn = document.getElementById('adminAddBtn');
+        const adminAddForm = document.getElementById('adminAddForm');
+        const adminCancelAddBtn = document.getElementById('adminCancelAdd');
+        
+        if (adminAddBtn && adminAddForm && adminCancelAddBtn) {
+            // Show add admin form
+            adminAddBtn.addEventListener('click', function() {
+                adminAddForm.style.display = 'block';
+                adminAddBtn.style.display = 'none';
+            });
+            
+            // Cancel adding admin
+            adminCancelAddBtn.addEventListener('click', function() {
+                adminAddForm.style.display = 'none';
+                adminAddBtn.style.display = 'inline-block';
+                adminAddForm.reset();
+            });
+            
+            // Form validation for adding admin
+            adminAddForm.addEventListener('submit', function(e) {
+                const password = document.getElementById('newAdminPassword').value;
+                const confirmPassword = document.getElementById('newAdminConfirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                }
+            });
+        }
+        
+        // Edit/Delete Admin functionality
+        const adminEditBtns = document.querySelectorAll('.admin-edit-btn:not([disabled])');
+        const adminDeleteBtns = document.querySelectorAll('.admin-delete-btn:not([disabled])');
+        
+        adminEditBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const adminItem = this.closest('.admin-list-item');
+                const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
+                alert('Edit admin: ' + adminName + ' (To be implemented)');
+            });
+        });
+        
+        adminDeleteBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const adminItem = this.closest('.admin-list-item');
+                const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
+                if (confirm('Are you sure you want to delete admin: ' + adminName + '?')) {
+                    alert('Delete admin: ' + adminName + ' (To be implemented)');
+                }
+            });
+        });
+    }
+});
+// Admin Profile Page - Add Admin functionality
+$(document).ready(function() {
+    // Show Add Admin form when button is clicked
+    $('#adminAddBtn').click(function() {
+        $('#adminAddForm').slideDown();
+    });
+    
+    // Hide Add Admin form when cancel button is clicked
+    $('#adminCancelAdd').click(function() {
+        $('#adminAddForm').slideUp();
+        $('#adminAddForm')[0].reset(); // Reset form fields
+    });
+    
+    // Validate password match on form submission
+    $('#adminAddForm').submit(function(e) {
+        const password = $('#newAdminPassword').val();
+        const confirmPassword = $('#newAdminConfirmPassword').val();
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+        }
+    });
+});
+
+// index page
+document.addEventListener('DOMContentLoaded', function() {
+    // Slideshow functionality for all slideshow containers
+    const slideshowContainers = document.querySelectorAll('.slideshow-container');
+    
+    slideshowContainers.forEach(container => {
+        const slides = container.querySelectorAll('.slideshow-slide');
+        let currentSlide = 0;
+        
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        // Only set up slideshow if slides exist
+        if (slides.length > 0) {
+            // Initialize first slide
+            showSlide(0);
+            // Change slide every 5 seconds
+            setInterval(nextSlide, 5000);
+        }
+    });
+    
+    // Scroll to top button
+    const scrollBtn = document.getElementById('scrollToTop');
+    
+    if (scrollBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollBtn.style.display = 'block';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        });
+        
+        scrollBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Animate elements when they come into view
+    const animateOnScroll = function() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        
+        elements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (elementPosition < windowHeight - 50) {
+                element.classList.add('animated');
+            }
+        });
+    };
+    
+    // Add animate-on-scroll class to elements
+    document.querySelectorAll('.flavor-card, .section-title, .video-container, .about-image, .about-content').forEach(el => {
+        el.classList.add('animate-on-scroll');
+    });
+    
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on page load
 });

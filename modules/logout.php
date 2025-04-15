@@ -1,15 +1,14 @@
 <?php
 require '../base.php';
 
-// Store the user role before destroying the session
-//$isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin';
-
 // Clear all session data
-$_SESSION = array();
+session_unset();
 session_destroy();
 
-// Start a new session to store the logout message
+// Start a new session to set a message
 session_start();
 $_SESSION['message'] = 'You have been logged out successfully';
-logout('/index.php');
+
+// Redirect to home page
+redirect('/index.php');
 ?>

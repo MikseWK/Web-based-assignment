@@ -1,5 +1,15 @@
 <?php
-include '../base.php';
+require '../base.php';
+
+// Create a direct database connection if $_db is not available
+if (!isset($_db) || $_db === null) {
+    try {
+        $_db = new PDO('mysql:host=localhost;dbname=assignment;charset=utf8mb4', 'root', '');
+        $_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die('Database connection failed: ' . $e->getMessage());
+    }
+}
 
 if (is_post()) {
     $name = req('name');
@@ -24,11 +34,16 @@ if (is_post()) {
     else if (!is_email($email)) {
         $_err['email'] = 'Invalid email';
     } else {
-        $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
-        $stm->execute([$email]);
+        // Use try-catch to handle potential database errors
+        try {
+            $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
+            $stm->execute([$email]);
 
-        if ($stm->fetchColumn() > 0) {
-            $_err['email'] = 'Email already exists';
+            if ($stm->fetchColumn() > 0) {
+                $_err['email'] = 'Email already exists';
+            }
+        } catch (PDOException $e) {
+            $_err['db'] = 'Database error: ' . $e->getMessage();
         }
     }
 

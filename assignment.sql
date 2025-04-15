@@ -55,6 +55,8 @@ CREATE TABLE `admin` (
 
 INSERT INTO `admin` (`id`, `name`, `password`, `phoneNumber`, `email`) VALUES
 (1, 'Ong', 'dd5fef9c1c1da1394d6d34b248c51be2ad740840', '01111111111', 'h@gmail.com');
+INSERT INTO `admin` (`id`, `name`, `password`, `phoneNumber`, `email`) VALUES 
+(NULL, 'test2', '123456', '0222222222', 'A@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -216,9 +218,63 @@ ALTER TABLE `addon`
 --
 -- Indexes for table `admin`
 --
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`);
+-- Modify the admin table to include role and profile_picture fields
+ALTER TABLE `admin` 
+ADD `role` varchar(50) DEFAULT 'Administrator' AFTER `email`,
+ADD `profile_picture` varchar(255) DEFAULT NULL AFTER `role`,
+ADD `last_login` datetime DEFAULT NULL AFTER `profile_picture`;
 
+-- Rename admin table to admins to match PHP references
+RENAME TABLE `admin` TO `admins`;
+
+-- Add session_id column to both customer and admins tables
+ALTER TABLE `admins` 
+ADD `session_id` varchar(255) DEFAULT NULL AFTER `last_login`;
+
+ALTER TABLE `customer` 
+ADD `profile_picture` varchar(255) DEFAULT NULL AFTER `email`,
+ADD `session_id` varchar(255) DEFAULT NULL AFTER `profile_picture`;
+
+-- Rename customer table to customers to match PHP references
+RENAME TABLE `customer` TO `customers`;
+
+-- Create products table for the menu items
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `availability` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Insert sample product data
+INSERT INTO `products` (`name`, `description`, `price`, `image`, `category`) VALUES
+('Vanilla Ice Cream', 'Classic vanilla ice cream made with real vanilla beans', 4.99, 'vanilla.jpg', 'Regular'),
+('Chocolate Ice Cream', 'Rich chocolate ice cream made with premium cocoa', 5.99, 'chocolate.jpg', 'Regular'),
+('Strawberry Ice Cream', 'Creamy strawberry ice cream with real fruit pieces', 5.99, 'strawberry.jpg', 'Regular'),
+('Mint Chocolate Chip', 'Refreshing mint ice cream with chocolate chips', 6.99, 'mint-choc.jpg', 'Premium');
+
+-- Create a contact_messages table for the contact form
+CREATE TABLE `contact_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `subject` varchar(200) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(20) DEFAULT 'unread',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Add a status column to orderrecord table
+ALTER TABLE `orderrecord` 
+ADD `status` varchar(50) DEFAULT 'pending' AFTER `amount`,
+ADD `created_at` timestamp NOT NULL DEFAULT current_timestamp() AFTER `status`;
 --
 -- Indexes for table `customer`
 --

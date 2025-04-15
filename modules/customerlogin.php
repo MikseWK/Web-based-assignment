@@ -1,8 +1,7 @@
 <?php
 require '../base.php';
 
-// ----------------------------------------------------------------------------
-
+// Only process login if it's a POST request
 if (is_post()) {
     $email    = req('email');
     $password = req('password');
@@ -28,7 +27,7 @@ if (is_post()) {
     }
 
     // Login user
-    if (!$_err) {
+    if (empty($_err)) {
         $stm = $_db->prepare('
             SELECT * FROM customer
             WHERE email = ? AND password = SHA1(?)
@@ -40,7 +39,8 @@ if (is_post()) {
             $_SESSION['role'] = 'Customer';
             $_SESSION['logged_in'] = true;
             $_SESSION['message'] = 'You have logged in successfully';
-            login($u,'/index.php');
+            $_SESSION['user'] = $u; // Store user data in session
+            redirect('/index.php'); // Use the redirect function instead of login
         }
         else {
             $_err['password'] = 'Email or password not matched';

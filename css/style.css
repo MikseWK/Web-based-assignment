@@ -1,3 +1,4 @@
+original css
 html, body {
     height: 100%;
     margin: 0;
@@ -1699,7 +1700,7 @@ nav.pager {
     }
 }
 
-/* admin profile  */
+
 /* Admin Dashboard Styles */
 /* Add this at the end of your style.css file */
 
@@ -2043,5 +2044,1100 @@ nav.pager {
     
     .sidebar {
         width: 100%;
+    }
+}
+
+/* customer Profile styles  */
+.profile-container {
+    display: flex;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.profile-sidebar {
+    width: 250px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    padding: 20px 0;
+}
+
+.profile-user-info {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-user-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-user-name {
+    margin-top: 10px;
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-menu-item {
+    padding: 12px 20px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    border-left: 3px solid transparent;
+}
+
+.profile-menu-item.active {
+    background-color: #1976d2;
+    color: white;
+    border-left-color: #1976d2;
+}
+
+.profile-menu-item.active a,
+.profile-menu-item.active i {
+    color: white;
+}
+
+.profile-menu-item:hover:not(.active) {
+    background-color: #f0f7ff;
+}
+
+.profile-menu-item i {
+    margin-right: 10px;
+    color: #666;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-menu-item a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-size: 14px;
+}
+
+.profile-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.profile-section-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+}
+
+.profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-card-title {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+}
+
+.profile-edit-btn {
+    background-color: transparent;
+    color: #1976d2;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.profile-edit-btn i {
+    margin-right: 5px;
+}
+
+.profile-edit-btn:hover {
+    background-color: #f0f7ff;
+}
+
+.profile-info-row {
+    margin-bottom: 20px;
+}
+
+.profile-info-label {
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.profile-info-value {
+    color: #333;
+    font-size: 16px;
+}
+
+.profile-form-group {
+    margin-bottom: 20px;
+}
+
+.profile-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-size: 14px;
+}
+
+.profile-form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.profile-form-control:focus {
+    border-color: #1976d2;
+    outline: none;
+}
+
+.profile-gender-options {
+    display: flex;
+    gap: 20px;
+}
+
+.profile-gender-option {
+    display: flex;
+    align-items: center;
+}
+
+.profile-gender-option input[type="radio"] {
+    margin-right: 8px;
+}
+
+.profile-gender-option input[type="radio"]:checked {
+    accent-color: #1976d2;
+}
+
+.profile-btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.profile-btn-primary {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+}
+
+.profile-btn-primary:hover {
+    background-color: #1565c0;
+}
+
+.profile-btn-secondary {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}
+
+.profile-btn-secondary:hover {
+    background-color: #d32f2f;
+}
+
+.profile-phone-input {
+    display: flex;
+    align-items: center;
+}
+
+.profile-phone-flag {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    height: 38px;
+}
+
+.profile-phone-flag img {
+    width: 20px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.profile-phone-number {
+    flex: 1;
+    border-radius: 0 4px 4px 0;
+}
+
+.profile-user-photo {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+}
+
+.profile-user-photo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-photo-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #1976d2;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.profile-success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-success-message i {
+    margin-right: 8px;
+}
+
+/* index page */
+/* Ice Cream Website Animations */
+/* Hero animations */
+.hero-title {
+    animation: fadeInDown 1.2s ease;
+}
+
+.hero-subtitle {
+    animation: fadeInUp 1.2s ease 0.3s;
+    animation-fill-mode: both;
+}
+
+.hero-button {
+    animation: pulse 2s infinite;
+}
+
+/* Flavor card animations */
+.flavor-card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.flavor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 20, 147, 0.3);
+}
+
+.flavor-image {
+    transition: transform 0.5s ease;
+}
+
+.flavor-card:hover .flavor-image {
+    transform: scale(1.1);
+}
+
+.flavor-button {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.flavor-button:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Section animations */
+.section-title {
+    animation: fadeIn 1s ease;
+}
+
+.video-container {
+    animation: fadeInUp 1s ease;
+}
+
+.about-image img {
+    animation: fadeInLeft 1s ease;
+}
+
+.about-content {
+    animation: fadeInRight 1s ease;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 20, 147, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* Additional animation styles */
+.floating-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.7;
+}
+
+.floating-icon:nth-child(1) {
+    top: 20%;
+    left: 15%;
+}
+
+.floating-icon:nth-child(2) {
+    top: 30%;
+    right: 20%;
+}
+
+.floating-icon:nth-child(3) {
+    bottom: 25%;
+    left: 30%;
+}
+
+.flavor-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.flavor-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: none;
+    z-index: 99;
+    font-size: 1.2rem;
+}
+
+/* Animation for elements that come into view */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Slideshow styles */
+.slideshow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.slideshow-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.slideshow-slide.active {
+    opacity: 1;
+}
+
+/* Make sure hero banner has position relative for proper stacking context */
+.hero-banner {
+    position: relative;
+    height: 80vh;
+    overflow: hidden;
+}
+/* About page hero slideshow styles */
+.about-hero {
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+}
+
+.about-hero .slideshow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.about-hero .slideshow-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.about-hero .slideshow-slide.active {
+    opacity: 1;
+}
+
+.about-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(255,20,147,0.7) 100%);
+    z-index: 1;
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.about-hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: fadeInDown 1.2s ease;
+}
+
+.about-hero-content p {
+    font-size: 1.2rem;
+    animation: fadeInUp 1.2s ease 0.3s;
+    animation-fill-mode: both;
+}
+
+/* Admin Profile Styles */
+.admin-profile-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.admin-profile-sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px 0;
+    border-right: 1px solid #eaeaea;
+}
+
+.admin-profile-user-info {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.admin-profile-user-info img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f0f0f0;
+}
+
+.admin-profile-user-name {
+    margin-top: 15px;
+    font-size: 18px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.admin-profile-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-profile-menu-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    color: #555;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.admin-profile-menu-item:hover {
+    background-color: #f5f5f5;
+    color: #2196F3;
+}
+
+.admin-profile-menu-item.active {
+    background-color: #e3f2fd;
+    color: #2196F3;
+    border-left: 4px solid #2196F3;
+}
+
+.admin-profile-menu-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.admin-profile-menu-item a {
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1;
+}
+
+.admin-profile-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #fff;
+}
+
+.admin-profile-section-title {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.admin-profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.admin-management-card {
+    margin-top: 30px;
+}
+
+.admin-profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.admin-profile-card-title {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.admin-profile-edit-btn {
+    background-color: transparent;
+    color: #2196F3;
+    border: 1px solid #2196F3;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.admin-profile-edit-btn:hover {
+    background-color: #2196F3;
+    color: #fff;
+}
+
+.admin-profile-edit-btn i {
+    margin-right: 8px;
+}
+
+.admin-profile-user-photo {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 25px;
+}
+
+.admin-profile-user-photo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f0f0f0;
+}
+
+.admin-profile-photo-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #2196F3;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.admin-profile-photo-edit:hover {
+    background-color: #0d8aee;
+}
+
+.admin-profile-info-row {
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-profile-info-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admin-profile-info-label {
+    width: 150px;
+    color: #777;
+    font-weight: 500;
+}
+
+.admin-profile-info-value {
+    flex-grow: 1;
+    color: #333;
+}
+
+.admin-profile-form {
+    margin-top: 20px;
+}
+
+.admin-add-form {
+    margin-top: 20px;
+}
+
+.admin-form-subtitle {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 18px;
+}
+
+.admin-profile-form-group {
+    margin-bottom: 20px;
+}
+
+.admin-profile-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.admin-profile-form-control {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+}
+
+.admin-profile-form-control:focus {
+    border-color: #2196F3;
+    outline: none;
+}
+
+.admin-profile-phone-input {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.admin-profile-phone-flag {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ddd;
+}
+
+.admin-profile-phone-flag img {
+    width: 20px;
+    margin-right: 5px;
+}
+
+.admin-profile-phone-input .admin-profile-form-control {
+    border: none;
+    flex-grow: 1;
+}
+
+.admin-profile-gender-options {
+    display: flex;
+    gap: 20px;
+}
+
+.admin-profile-gender-option {
+    display: flex;
+    align-items: center;
+}
+
+.admin-profile-gender-option input {
+    margin-right: 8px;
+}
+
+.admin-profile-form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.admin-profile-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+}
+
+.admin-profile-btn-primary {
+    background-color: #2196F3;
+    color: #fff;
+}
+
+.admin-profile-btn-primary:hover {
+    background-color: #0d8aee;
+}
+
+.admin-profile-btn-secondary {
+    background-color: #f5f5f5;
+    color: #555;
+}
+
+.admin-profile-btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.admin-profile-success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.admin-profile-success-message i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+/* Admin List Styles */
+.admin-list-container {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.admin-list-header {
+    display: flex;
+    background-color: #f5f5f5;
+    font-weight: bold;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-list-item {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-list-item:last-child {
+    border-bottom: none;
+}
+
+.admin-list-col {
+    padding: 12px 15px;
+    flex: 1;
+}
+
+.admin-list-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.admin-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.admin-action-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.admin-edit-btn {
+    color: #2196F3;
+}
+
+.admin-delete-btn {
+    color: #F44336;
+}
+
+.admin-action-btn[disabled] {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/* Responsive styles for admin profile */
+@media (max-width: 992px) {
+    .admin-profile-container {
+        flex-direction: column;
+    }
+    
+    .admin-profile-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eaeaea;
+    }
+    
+    .admin-profile-menu {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .admin-profile-menu-item {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-profile-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .admin-profile-edit-btn {
+        margin-top: 10px;
+    }
+    
+    .admin-profile-info-row {
+        flex-direction: column;
+    }
+    
+    .admin-profile-info-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .admin-list-header {
+        display: none;
+    }
+    
+    .admin-list-item {
+        flex-direction: column;
+        padding: 10px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .admin-list-col {
+        padding: 5px 0;
+        position: relative;
+    }
+    
+    .admin-list-col:nth-child(1)::before {
+        content: "Name: ";
+        font-weight: bold;
+    }
+    
+    .admin-list-col:nth-child(2)::before {
+        content: "Email: ";
+        font-weight: bold;
+    }
+    
+    .admin-list-col:nth-child(3)::before {
+        content: "Role: ";
+        font-weight: bold;
+    }
+    
+    .admin-list-actions {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-profile-menu-item {
+        width: 100%;
+    }
+    
+    .admin-profile-form-actions {
+        flex-direction: column;
+    }
+    
+    .admin-profile-btn {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }

@@ -54,14 +54,20 @@
                     <div class="dropdown-content">
                         <?php if (isAdmin()): ?>
                             <span class="user-name">Admin <?= $_user->name ?? 'User' ?></span>
-                            <a href="/modules/adminProfile.php">Admin Dashboard</a>
                         <?php else: ?>
                             <span class="user-name"><?= $_user->name ?? 'User' ?></span>
-                            <a href="/modules/customerprofile.php">My Profile</a>
-                            <a href="/modules/orders.php">My Orders</a>
                         <?php endif; ?>
                         <!-- In the dropdown menu for logged-in users -->
-                        <a href="/modules/logout.php">Logout</a>
+                        <div class="dropdown-menu">
+                            <?php if (isAdmin()): ?>
+                                <a href="/modules/adminProfile.php"><?= $_user->name ?? 'Admin' ?>'s Profile</a>
+                                <a href="/modules/adminPage.php">Admin Dashboard</a>
+                            <?php else: ?>
+                                <a href="/modules/customerprofile.php">My Profile</a>
+                                <a href="/modules/orders.php">My Orders</a>
+                            <?php endif; ?>
+                            <a href="/modules/logout.php">Logout</a>
+                        </div>
                     </div>
                 </div>
             <?php else: ?>
@@ -71,7 +77,7 @@
                         <img src="/images/loginIcon.png" alt="Login" class="profile-pic">
                     </div>
                     <div class="dropdown-content">
-                        <a href="/modules/login.php">Customer Login</a>
+                        <a href="/modules/customerlogin.php">Customer Login</a>
                         <a href="/modules/adminlogin.php">Admin Login</a>
                     </div>
                 </div>
