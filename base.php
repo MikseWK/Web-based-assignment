@@ -121,56 +121,62 @@ function get_user_id() {
     return $_user->id ?? null;
 }
 
-// Get cart items for logged-in user from database
-function get_cart_items() {
-    global $_db;
-    $items = [];
-    
-    if (is_logged_in()) {
-        $user_id = get_user_id();
-        $stmt = $_db->prepare("SELECT c.product_id, c.quantity, p.name, p.price, p.photo 
-                              FROM cart c 
-                              JOIN product p ON c.product_id = p.id 
-                              WHERE c.user_id = ?");
-        $stmt->execute([$user_id]);
-        $items = $stmt->fetchAll();
-    }
-    
-    return $items;
-}
-
 // Get cart count (number of items)
 function get_cart_count() {
     global $_db;
     
-    if (is_logged_in()) {
-        $user_id = get_user_id();
-        $stmt = $_db->prepare("SELECT SUM(quantity) FROM cart WHERE user_id = ?");
-        $stmt->execute([$user_id]);
-        return (int)$stmt->fetchColumn() ?: 0;
+    if (!is_logged_in()) {
+        return 0;
     }
     
-    return 0;
+    $user_id = get_user_id();
+    $stmt = $_db->prepare("SELECT SUM(quantity) as count FROM cart WHERE customer_id = ?");
+    $stmt->execute([$user_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    return $result->count ?? 0;
 }
 
-// Get cart total price
+// Get cart items for logged-in user from database
+function get_cart_items() {
+    global $_db;
+    
+    if (!is_logged_in()) {
+        return [];
+    }
+    
+    $user_id = get_user_id();
+    $stmt = $_db->prepare("
+        SELECT c.*, p.name, p.price, p.photo 
+        FROM cart c
+        JOIN product p ON c.product_id = p.id
+        WHERE c.customer_id = ?
+    ");
+    $stmt->execute([$user_id]);
+    
+    return $stmt->fetchAll(PDO::FETCH_OBJ);
+}
+
 function get_cart_total() {
     global $_db;
     
-    if (is_logged_in()) {
-        $user_id = get_user_id();
-        $stmt = $_db->prepare("SELECT SUM(c.quantity * p.price) 
-                              FROM cart c 
-                              JOIN product p ON c.product_id = p.id 
-                              WHERE c.user_id = ?");
-        $stmt->execute([$user_id]);
-        return (float)$stmt->fetchColumn() ?: 0;
+    if (!is_logged_in()) {
+        return 0;
     }
     
-    return 0;
+    $user_id = get_user_id();
+    $stmt = $_db->prepare("
+        SELECT SUM(c.quantity * p.price) as total
+        FROM cart c
+        JOIN product p ON c.product_id = p.id
+        WHERE c.customer_id = ?
+    ");
+    $stmt->execute([$user_id]);
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+    
+    return $result->total ?? 0;
 }
 
-// Add item to cart
 function add_to_cart($product_id, $quantity = 1) {
     global $_db;
     
@@ -178,58 +184,24 @@ function add_to_cart($product_id, $quantity = 1) {
         return false;
     }
     
-    if (!is_exists($product_id, 'product', 'id')) {
-        return false;
-    }
-    
     $user_id = get_user_id();
     
     // Check if product already in cart
-    $stmt = $_db->prepare("SELECT quantity FROM cart WHERE user_id = ? AND product_id = ?");
+    $stmt = $_db->prepare("SELECT * FROM cart WHERE customer_id = ? AND product_id = ?");
     $stmt->execute([$user_id, $product_id]);
-    $current_quantity = $stmt->fetchColumn();
+    $existing = $stmt->fetch(PDO::FETCH_OBJ);
     
-    try {
-        if ($current_quantity !== false) {
-            // Update existing cart item
-            $new_quantity = $current_quantity + $quantity;
-            $stmt = $_db->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?");
-            $result = $stmt->execute([$new_quantity, $user_id, $product_id]);
-            return $result;
-        } else {
-            // Add new cart item
-            $stmt = $_db->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
-            $result = $stmt->execute([$user_id, $product_id, $quantity]);
-            return $result;
-        }
-    } catch (PDOException $e) {
-        // Log error for debugging
-        error_log("Cart error: " . $e->getMessage());
-        return false;
-    }
-}
-
-// Update cart item quantity
-function update_cart_quantity($product_id, $quantity) {
-    global $_db;
-    
-    if (!is_logged_in()) {
-        return false;
-    }
-    
-    $user_id = get_user_id();
-    
-    if ($quantity <= 0) {
-        // Remove item from cart if quantity is 0 or negative
-        return remove_from_cart($product_id);
-    } else {
+    if ($existing) {
         // Update quantity
-        $stmt = $_db->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?");
+        $stmt = $_db->prepare("UPDATE cart SET quantity = quantity + ? WHERE customer_id = ? AND product_id = ?");
         return $stmt->execute([$quantity, $user_id, $product_id]);
+    } else {
+        // Insert new item
+        $stmt = $_db->prepare("INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, ?)");
+        return $stmt->execute([$user_id, $product_id, $quantity]);
     }
 }
 
-// Remove item from cart
 function remove_from_cart($product_id) {
     global $_db;
     
@@ -238,21 +210,8 @@ function remove_from_cart($product_id) {
     }
     
     $user_id = get_user_id();
-    $stmt = $_db->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
+    $stmt = $_db->prepare("DELETE FROM cart WHERE customer_id = ? AND product_id = ?");
     return $stmt->execute([$user_id, $product_id]);
-}
-
-// Clear entire cart
-function clear_cart() {
-    global $_db;
-    
-    if (!is_logged_in()) {
-        return false;
-    }
-    
-    $user_id = get_user_id();
-    $stmt = $_db->prepare("DELETE FROM cart WHERE user_id = ?");
-    return $stmt->execute([$user_id]);
 }
 
 // Is exists?

@@ -2,7 +2,9 @@
 require '../base.php';
 // ----------------------------------------------------------------------------
 
-$arr = $_db->query('SELECT * FROM assignment.product');
+// Fix the query to fetch all products without the assignment prefix
+$stmt = $_db->query('SELECT * FROM product');
+$arr = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 // Get cart count for the current user
 $cartCount = get_cart_count();
@@ -14,10 +16,10 @@ if (is_post() && isset($_POST['add_to_cart'])) {
     $product_id = post('product_id');
     $quantity = post('quantity', 1);
     
-    // Add debug output to see what's being submitted
-    echo "<div style='background-color: #f8d7da; padding: 10px; margin: 10px;'>";
-    echo "Adding to cart: Product ID = $product_id, Quantity = $quantity<br>";
-    echo "</div>";
+    // Remove debug output
+    // echo "<div style='background-color: #f8d7da; padding: 10px; margin: 10px;'>";
+    // echo "Adding to cart: Product ID = $product_id, Quantity = $quantity<br>";
+    // echo "</div>";
     
     if (is_logged_in()) {
         $result = add_to_cart($product_id, $quantity);
@@ -48,7 +50,7 @@ include '../header.php';
 ?>
 
 <h1>Our Products</h1>
-
+<link rel="stylesheet" href="../css/style.css">
 <nav class="menu">
     <div class="menu-bar">
     <i class="fa-solid fa-bars-staggered"></i>
@@ -125,9 +127,12 @@ include '../header.php';
             <h5>Total</h5>
             <div class="cart-total">RM<?= number_format($cartTotal, 2) ?></div>
         </div>
-        <button class="checkout-btn" onclick="window.location.href='checkout.php'">Checkout</button>
+        <!-- Ensure this button's disabled state depends on $cartItems -->
+        <button class="checkout-btn" onclick="window.location.href='checkout.php'" <?= empty($cartItems) ? 'disabled' : '' ?>>Checkout</button>
     </div>
 </div>
+
+<!-- Removed the duplicate cart popup section in the previous step -->
 
 <script src="../js/app.js"></script>
 <?php

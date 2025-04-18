@@ -23,17 +23,20 @@ if (is_post()) {
     // Login user
     if (!$_err) {
         $stm = $_db->prepare('
-            SELECT * FROM customer
+            SELECT * FROM admin
             WHERE email = ? AND password = SHA1(?)
         ');
         $stm->execute([$email, $password]);
-        $u = $stm->fetch();
+        $u = $stm->fetch(PDO::FETCH_ASSOC); // Explicitly fetch as associative array
 
         if ($u) {
             $_SESSION['role'] = 'Admin';
             $_SESSION['logged_in'] = true;
+            $_SESSION['id'] = $u['id']; // Store admin ID in session
+            $_SESSION['name'] = $u['name']; // Store admin name in session
+            $_SESSION['email'] = $u['email']; // Store admin email in session
             $_SESSION['message'] = 'You have logged in successfully';
-            login($u,'/modules/adminPage.php');
+            login($u,'/modules/adminProfile.php'); // Redirect to admin profile page
         }
         else {
             $_err['password'] = 'Email or password not matched';

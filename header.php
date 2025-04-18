@@ -1,13 +1,35 @@
+<?php
+// Add this at the top of your header.php file
+$base_path = '';
+if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
+    $base_path = '../';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $_title ?? 'Frost Delights' ?></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <!-- Change the CSS path to use relative paths -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- <link rel="stylesheet" href="css/checkout.css"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ADD THIS BELOW IF WANT  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Add this script to properly handle the message fadeout -->
+    <script>
+        $(document).ready(function() {
+            // If message exists, fade it out after 3 seconds and remove from DOM
+            if ($('.message-container').length) {
+                setTimeout(function() {
+                    $('.message-container').fadeOut(500, function() {
+                        $(this).remove(); // Completely remove from DOM after fade
+                    });
+                }, 3000);
+            }
+        });
+    </script>
 </head>
 <body>
     <?php if (isset($_SESSION['message'])): ?>
@@ -26,15 +48,15 @@
         <nav>
             <ul class="main-menu">
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
-                    <li><a href="/modules/adminPage.php">Home</a></li>
-                    <li><a href="/modules/memberMain.php">Member</a></li>
-                    <li><a href="../modules/productMain.php">Product</a></li>
-                    <li><a href="../modules/orderMain.php">Order</a></li>
+                    <li><a href="<?= $base_path ?>modules/adminPage.php">Home</a></li>
+                    <li><a href="<?= $base_path ?>modules/memberMain.php">Member</a></li>
+                    <li><a href="<?= $base_path ?>modules/productMain.php">Product</a></li>
+                    <li><a href="<?= $base_path ?>modules/orderMain.php">Order</a></li>
                 <?php else: ?>
-                    <li><a href="../index.php">Home</a></li>
-                    <li><a href="../modules/aboutus.php">About Us</a></li>
-                    <li><a href="../modules/menu.php">Menu</a></li>
-                    <li><a href="../modules/contact.php">Contact</a></li>
+                    <li><a href="<?= $base_path ?>index.php">Home</a></li>
+                    <li><a href="<?= $base_path ?>modules/aboutus.php">About Us</a></li>
+                    <li><a href="<?= $base_path ?>modules/menu.php">Menu</a></li>
+                    <li><a href="<?= $base_path ?>modules/contact.php">Contact</a></li>
                 <?php endif; ?>
             </ul>
         </nav>

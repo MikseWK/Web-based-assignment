@@ -59,99 +59,7 @@ $(() => {
 
 //
 
-document.addEventListener('DOMContentLoaded', () => {
-    const addToCartButtons = document.querySelectorAll('.fa-cart-plus');
-    const cartItemCount = document.querySelector('.cart span');
-    const cartItemsList = document.querySelector('.cart-item');
-    const cartTotal = document.querySelector('.cart-total');
-    const cartIcon = document.querySelector('.cart');
-    const sidebar = document.querySelector('.sidebar');
-    const closeButton = document.querySelector('.sidebar-close');
 
-    let cartItems = [];
-    let totalAmount = 0;
-
-    // Cart icon click handler
-    cartIcon.addEventListener('click', () => {
-        sidebar.classList.add('open');
-    });
-
-    // Close button handler
-    closeButton.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-    });
-
-    // Add to cart functionality
-    addToCartButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            const productElement = button.closest('.product');
-            const item = {
-                name: productElement.querySelector('.product-name').textContent,
-                price: parseFloat(
-                    productElement.querySelector('.price').textContent.replace('RM ', '')
-                ),
-                quantity: 1,
-            };
-
-            const existingItem = cartItems.find(
-                (cartItem) => cartItem.name === item.name
-            );
-            
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cartItems.push(item);
-            }
-
-            totalAmount += item.price;
-            updateCartUI();
-        });
-    });
-
-    function updateCartUI() {
-        updateCartItemCount();
-        updateCartItemList();
-        updateCartTotal();
-    }
-
-    function updateCartItemCount() {
-        const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        cartItemCount.textContent = totalQuantity;
-    }
-
-    function updateCartItemList() {
-        cartItemsList.innerHTML = '';
-        cartItems.forEach((item, index) => {
-            const cartItem = document.createElement('div');
-            cartItem.classList.add('cart-item', 'individual-cart-item');
-            cartItem.innerHTML = `
-                <span>(${item.quantity}x) ${item.name}</span>
-                <span class="cart-item-price">RM${(item.price * item.quantity).toFixed(2)}
-                    <button class="remove-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
-                </span>
-            `;
-            cartItemsList.appendChild(cartItem);
-        });
-
-        // Add event listeners to remove buttons
-        document.querySelectorAll('.remove-btn').forEach((button) => {
-            button.addEventListener('click', (event) => {
-                const index = event.currentTarget.dataset.index;
-                removeItemFromCart(index);
-            });
-        });
-    }
-
-    function removeItemFromCart(index) {
-        const removedItem = cartItems.splice(index, 1)[0];
-        totalAmount -= removedItem.price * removedItem.quantity;
-        updateCartUI();
-    }
-
-    function updateCartTotal() {
-        cartTotal.textContent = `RM${totalAmount.toFixed(2)}`;
-    }
-});
 
 
 //modify stocks
@@ -361,8 +269,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// admin dashboard 
+// admin dashboard
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if we're on the admin dashboard page
+    if (document.querySelector('.admin-dashboard-container')) {
+        // Initialize dashboard charts
+        initializeProductSalesChart();
+        initializeCategorySalesChart();
+        
+        // Set up dashboard refresh timer (every 5 minutes)
+        setInterval(refreshDashboardStats, 300000);
+    }
+    
     // Animation for bars in chart
     const bars = document.querySelectorAll('.bar');
     bars.forEach((bar, index) => {
@@ -441,6 +359,100 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Functions for admin dashboard charts
+function initializeProductSalesChart() {
+    const productDataElement = document.getElementById('product-data');
+    if (!productDataElement) return;
+    
+    const productLabels = JSON.parse(productDataElement.dataset.labels || '[]');
+    const productSalesData = JSON.parse(productDataElement.dataset.sales || '[]');
+    
+    const productSalesChart = new Chart(
+        document.getElementById('productSalesChart'),
+        {
+            type: 'bar',
+            data: {
+                labels: productLabels,
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: productSalesData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        }
+    );
+}
+
+function initializeCategorySalesChart() {
+    const categoryDataElement = document.getElementById('category-data');
+    if (!categoryDataElement) return;
+    
+    const categoryLabels = JSON.parse(categoryDataElement.dataset.labels || '[]');
+    const categorySalesData = JSON.parse(categoryDataElement.dataset.sales || '[]');
+    
+    const categorySalesChart = new Chart(
+        document.getElementById('categorySalesChart'),
+        {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categorySalesData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        }
+    );
+}
+
+function refreshDashboardStats() {
+    fetch('admin-ajax.php?action=refresh_stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateDashboardCards(data.stats);
+            }
+        })
+        .catch(error => console.error('Error refreshing dashboard:', error));
+}
+
+function updateDashboardCards(stats) {
+    const newCustomersElement = document.getElementById('new-customers-count');
+    const totalSalesElement = document.getElementById('total-sales-amount');
+    const newOrdersElement = document.getElementById('new-orders-count');
+    const totalProductsElement = document.getElementById('total-products-count');
+    
+    if (newCustomersElement) newCustomersElement.textContent = stats.new_customers;
+    if (totalSalesElement) totalSalesElement.textContent = '$' + parseFloat(stats.total_sales).toFixed(2);
+    if (newOrdersElement) newOrdersElement.textContent = stats.new_orders;
+    if (totalProductsElement) totalProductsElement.textContent = stats.total_products;
+}
+
 // Admin Profile functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Only run this code if we're on the admin profile page
@@ -504,17 +516,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .catch(error => {
-                    console.error('Error parsing JSON:', error);
-                    return { success: false, message: 'Error processing response' };
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
                 })
                 .then(data => {
                     console.log('Response received:', data);
                     
-                    // For demo purposes, we'll simulate a successful response
-                    const success = data?.success || true;
-                    const message = data?.message || 'Profile updated successfully!';
+                    // Use the actual response data
+                    const success = data.success;
+                    const message = data.message || 'Profile updated successfully!';
                     
                     if (success) {
                         // Update the view mode with new values
@@ -609,18 +622,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const adminCancelAddBtn = document.getElementById('adminCancelAdd');
         
         if (adminAddBtn && adminAddForm && adminCancelAddBtn) {
-            // Show add admin form
-            adminAddBtn.addEventListener('click', function() {
-                adminAddForm.style.display = 'block';
-                adminAddBtn.style.display = 'none';
-            });
+            // // Show add admin form
+            // adminAddBtn.addEventListener('click', function() {
+            //     adminAddForm.style.display = 'block';
+            //     adminAddBtn.style.display = 'none';
+            // });
             
-            // Cancel adding admin
-            adminCancelAddBtn.addEventListener('click', function() {
-                adminAddForm.style.display = 'none';
-                adminAddBtn.style.display = 'inline-block';
-                adminAddForm.reset();
-            });
+            // // Cancel adding admin
+            // adminCancelAddBtn.addEventListener('click', function() {
+            //     adminAddForm.style.display = 'none';
+            //     adminAddBtn.style.display = 'inline-block';
+            //     adminAddForm.reset();
+            // });
             
             // Form validation for adding admin
             adminAddForm.addEventListener('submit', function(e) {
@@ -751,4 +764,154 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Run once on page load
+});
+
+// Add these functions to your existing app.js file
+
+// Initialize the payment page
+function initPaymentPage() {
+    // Initialize Stripe Elements
+    const stripe = Stripe('pk_test_YourPublishableKeyHere'); // Replace with your actual publishable key
+    const elements = stripe.elements();
+    
+    // Create card Element and mount it
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        }
+    });
+    
+    cardElement.mount('#card-element');
+    
+    // Handle real-time validation errors
+    cardElement.on('change', function(event) {
+        const displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+    
+    // Handle form submission
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Disable the submit button to prevent repeated clicks
+        document.getElementById('submit-button').disabled = true;
+        
+        stripe.createToken(cardElement).then(function(result) {
+            if (result.error) {
+                // Show error to customer
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+                document.getElementById('submit-button').disabled = false;
+            } else {
+                // Send the token to your server
+                stripeTokenHandler(result.token);
+            }
+        });
+    });
+    
+    // Submit the form with the token ID
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        const form = document.getElementById('payment-form');
+        const hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+        
+        // Submit the form
+        form.submit();
+    }
+    
+    // Handle voucher application
+    $('#apply-voucher').click(function() {
+        const voucherCode = $('#voucher-code').val().trim();
+        
+        if (!voucherCode) {
+            $('#voucher-message').text('Please enter a voucher code');
+            return;
+        }
+        
+        // This is a placeholder for future voucher implementation
+        // In a real application, you would make an AJAX call to validate the voucher
+        $('#voucher-message').text('Voucher functionality will be implemented in the future');
+        
+        // For demonstration purposes, let's pretend the voucher gives a $5 discount
+        const currentTotal = parseFloat($('#final-amount').text().replace('$', ''));
+        const discount = 5.00;
+        const newTotal = Math.max(0, currentTotal - discount).toFixed(2);
+        
+        $('#discount-amount').text('-$' + discount.toFixed(2));
+        $('#final-amount').text('$' + newTotal);
+    });
+    
+    // Connect the Place Order button to the payment form submission
+    $('#place-order-btn').click(function() {
+        $('#payment-form').submit();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cartIcon = document.querySelector('.menu .cart'); 
+    const sidebar = document.getElementById('sidebar');
+    const closeButton = document.querySelector('.sidebar-close i');
+    const checkoutButton = document.querySelector('.checkout');
+
+    // Cart icon click handler to open sidebar
+    if (cartIcon && sidebar) {
+        cartIcon.addEventListener('click', (event) => {
+            event.stopPropagation();
+            sidebar.classList.add('open');
+        });
+    }
+
+    // Close button handler
+    if (closeButton && sidebar) {
+        closeButton.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+    }
+
+    // Add checkout button handler to check if cart is empty
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', (event) => {
+            const cartItems = document.querySelectorAll('.individual-cart-item');
+            const cartTotal = parseFloat(document.querySelector('.cart-total')?.textContent.replace('RM', '') || '0');
+            
+            if (cartItems.length === 0 || cartTotal <= 0) {
+                event.preventDefault(); // Prevent the default action (navigation)
+                alert('Your cart is empty!'); // Show alert
+                // Don't redirect - just stay on the current page
+            }
+            // If cart has items, the default action will proceed to checkout
+        });
+    }
+
+    // Optional: Close sidebar when clicking outside of it
+    if (sidebar) {
+        document.addEventListener('click', (event) => {
+            if (sidebar.classList.contains('open') &&
+                !sidebar.contains(event.target) &&
+                !cartIcon.contains(event.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+    }
 });

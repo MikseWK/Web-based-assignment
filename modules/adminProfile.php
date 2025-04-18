@@ -30,8 +30,7 @@ if ($conn->connect_error) {
 // Get admin data from database - use id from session if available, otherwise use a default value
 // Change this line to use the correct session variable
 $adminId = $_SESSION['admin_id'] ?? $_SESSION['id'] ?? 1; // Try both possible session variables
-// For debugging purposes
-echo "Logged in as: " . ($_SESSION['name'] ?? 'Unknown') . " (ID: $adminId)";
+// Remove debugging echo statement
 
 $query = "SELECT * FROM admin WHERE id = ?";
 $stmt = $conn->prepare($query);
@@ -74,6 +73,32 @@ include '../header.php';
 ?>
 
 <div class="admin-profile-container">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Add inline styles for alerts -->
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .alert i {
+            margin-right: 8px;
+        }
+    </style>
     <aside class="admin-profile-sidebar">
         <div class="admin-profile-user-info">
             <img src="<?= isset($adminArray['profile_picture']) && !empty($adminArray['profile_picture']) ? $adminArray['profile_picture'] : '../assets/images/default-admin.png' ?>" alt="Admin Profile">
@@ -116,6 +141,22 @@ include '../header.php';
                     <i class="fas fa-edit"></i> Change Profile Information
                 </button>
             </div>
+            
+            <!-- Add success message display -->
+            <?php if(isset($_SESSION['success_message'])): ?>
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <?php echo $_SESSION['success_message']; ?>
+            </div>
+            <?php unset($_SESSION['success_message']); ?>
+            <?php endif; ?>
+            
+            <!-- Add error message display -->
+            <?php if(isset($_SESSION['error_message'])): ?>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> <?php echo $_SESSION['error_message']; ?>
+            </div>
+            <?php unset($_SESSION['error_message']); ?>
+            <?php endif; ?>
             
             <div id="adminProfileViewMode">
                 <div class="admin-profile-user-photo">

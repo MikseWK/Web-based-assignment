@@ -1,0 +1,234 @@
+/* Checkout Page Styles */
+.checkout-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.checkout-items {
+    flex: 2;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.checkout-summary {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+}
+
+.checkout-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.checkout-item {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    align-items: center;
+}
+
+.checkout-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+.checkout-item-details {
+    flex: 1;
+}
+
+.checkout-item-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.checkout-item-price {
+    color: #666;
+}
+
+.checkout-item-quantity {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.checkout-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 5px 0;
+}
+
+.checkout-total {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.checkout-btn {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.checkout-btn:hover {
+    background-color: #ff6b81;
+}
+
+/* Payment Method Styles */
+.payment-methods {
+    margin-top: 30px;
+}
+
+.payment-method-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.payment-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.payment-option {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.payment-option.active {
+    border-color: #ff4757;
+    background-color: rgba(255, 71, 87, 0.05);
+}
+
+.payment-option img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+/* Voucher/Discount Section */
+.voucher-section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.voucher-input {
+    display: flex;
+    gap: 10px;
+}
+
+.voucher-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.voucher-input button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Shipping Options */
+.shipping-options {
+    margin: 20px 0;
+}
+
+.shipping-option {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.shipping-option:hover {
+    background-color: #f9f9f9;
+}
+
+.shipping-option.selected {
+    border-color: #ff4757;
+    background-color: rgba(255, 71, 87, 0.05);
+}
+
+.shipping-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.shipping-details {
+    flex: 1;
+}
+
+.shipping-price {
+    font-weight: bold;
+}
+
+.shipping-eta {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-container {
+        flex-direction: column;
+    }
+    
+    .checkout-summary {
+        position: static;
+    }
+}
+
+/* Override any conflicting styles from the main stylesheet */
+main {
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
