@@ -8,9 +8,9 @@ include 'header.php';
     <section class="hero-banner">
         <!-- Slideshow background -->
         <div class="slideshow-container">
-            <div class="slideshow-slide active" style="background-image: url('images/gelato.jpeg');"></div>
-            <div class="slideshow-slide" style="background-image: url('images/softserve.jpeg');"></div>
-            <div class="slideshow-slide" style="background-image: url('images/yogurttest.jpeg');"></div>
+            <div class="slideshow-slide active" style="background-image: url('images/pexels-roman-odintsov-5061197.jpg');"></div>
+            <div class="slideshow-slide" style="background-image: url('images/pexels-kampus-8777827.jpg');"></div>
+            <div class="slideshow-slide" style="background-image: url('images/pexels-micheile-7886449.jpg');"></div>
         </div>
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -89,7 +89,7 @@ include 'header.php';
         <div class="container">
             <h2 class="section-title">See How We Make Our Ice Cream</h2>
             <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/bDDazMFfW2g" 
                         title="Ice Cream Making Process" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -99,17 +99,36 @@ include 'header.php';
         </div>
     </section>
 
-    <!-- About Us Section with animations -->
+    <!-- Customer Reviews Section in Card Style -->
     <section class="about-section">
-        <div class="about-container">
-            <div class="about-image">
-                <img src="assets/images/about-us.jpg" alt="About Frost Delights">
+        <h2 class="section-title">Our Coolest Fans</h2>
+        <div class="about-reviews-grid">
+            <div class="about-card">
+                <div class="about-quote">
+                    <span class="about-stars">★★★★★</span>
+                    <p class="about-quote-text">
+                        "The ice cream was incredibly creamy and flavorful, with a wide variety of unique and delicious options. Highly recommended!"
+                    </p>
+                    <div class="about-author">— Muhd H.</div>
+                </div>
             </div>
-            <div class="about-content">
-                <h2 class="about-title">Our Story</h2>
-                <p class="about-text">Founded in 2010, Frost Delights has been serving premium handcrafted ice cream made from the finest ingredients. Our passion for quality and innovation has made us a beloved destination for ice cream lovers.</p>
-                <p class="about-text">We take pride in creating unique flavors that delight the senses and bring joy to our customers. Every scoop is made with love and attention to detail.</p>
-                <button class="about-button">Learn More About Us</button>
+            <div class="about-card">
+                <div class="about-quote">
+                    <span class="about-stars">★★★★★</span>
+                    <p class="about-quote-text">
+                        "I am super in love with the matcha ice cream. The waffles are good as well and love love love the vibe."
+                    </p>
+                    <div class="about-author">— Deeba F.</div>
+                </div>
+            </div>
+            <div class="about-card">
+                <div class="about-quote">
+                    <span class="about-stars">★★★★★</span>
+                    <p class="about-quote-text">
+                        "Their durian series ice cream is hard to resist once you try it. The ice cream is rich with durian flavor, just like eating real durian."
+                    </p>
+                    <div class="about-author">— S.</div>
+                </div>
             </div>
         </div>
     </section>

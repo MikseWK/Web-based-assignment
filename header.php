@@ -107,5 +107,4 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
         </div>
     </header>
 
-    <main>
-        <h1><?= $_title ?? 'Frosty Delights' ?></h1>
+    

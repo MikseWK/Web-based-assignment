@@ -249,3 +249,24 @@ function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
 function html_file($key, $accept = '', $attr = '') {
     echo "<input type='file' id='$key' name='$key' accept='$accept' $attr>";
 }
+
+/**
+ * Get database connection
+ * @return mysqli Database connection
+ */
+function get_db_connection() {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "assignment";
+    
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    
+    return $conn;
+}
