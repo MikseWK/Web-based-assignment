@@ -72,7 +72,7 @@ $categorySales = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 // Get recent orders
 $recentOrdersQuery = "
-    SELECT o.id, o.order_date, o.total_amount, o.status, c.name as customer_name
+    SELECT o.order_id, o.order_date, o.total_amount, o.status, c.name as customer_name
     FROM orders o
     JOIN customers c ON o.customer_id = c.id
     ORDER BY o.order_date DESC
@@ -103,13 +103,14 @@ $_title = 'Admin Dashboard';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $_title ?></title>
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/admin-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <?php include 'header.php'; ?>
+    <?php include '../header.php'; ?>
     
     <div class="admin-dashboard-container">
         <h1 class="admin-dashboard-title">Admin Dashboard</h1>
@@ -118,11 +119,11 @@ $_title = 'Admin Dashboard';
             <div class="admin-stat-card customers">
                 <i class="fas fa-users"></i>
                 <h3 id="new-customers-count"><?= $todayStats['new_customers'] ?? 0 ?></h3>
-                <p>New Customers</p>
+                <p>New Customers Registration</p>
             </div>
             <div class="admin-stat-card sales">
                 <i class="fas fa-dollar-sign"></i>
-                <h3 id="total-sales-amount">$<?= number_format($todayStats['total_sales'] ?? 0, 2) ?></h3>
+                <h3 id="total-sales-amount">RM<?= number_format($todayStats['total_sales'] ?? 0, 2) ?></h3>
                 <p>Total Sales</p>
             </div>
             <div class="admin-stat-card orders">
@@ -174,10 +175,10 @@ $_title = 'Admin Dashboard';
                     <?php else: ?>
                         <?php foreach ($recentOrders as $order): ?>
                             <tr>
-                                <td>#<?= $order['id'] ?></td>
+                                <td>#<?= $order['order_id'] ?></td>
                                 <td><?= htmlspecialchars($order['customer_name']) ?></td>
                                 <td><?= date('M d, Y H:i', strtotime($order['order_date'])) ?></td>
-                                <td>$<?= number_format($order['total_amount'], 2) ?></td>
+                                <td>RM<?= number_format($order['total_amount'], 2) ?></td>
                                 <td class="status-<?= strtolower($order['status']) ?>"><?= ucfirst($order['status']) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -187,7 +188,7 @@ $_title = 'Admin Dashboard';
         </div>
         
         <div class="admin-data-table">
-            <h2>New Customers</h2>
+            <h2>New Customer Registration</h2>
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -217,7 +218,7 @@ $_title = 'Admin Dashboard';
         </div>
     </div>
     
-    <script src="../js/admin-dashboard.js"></script>
-    <?php include 'footer.php'; ?>
+    <script src="../js/app.js"></script>
+    <?php include '../footer.php'; ?>
 </body>
 </html>

@@ -16,7 +16,7 @@ include 'header.php';
         <div class="hero-content">
             <h1 class="hero-title">Indulge in Premium Ice Cream</h1>
             <p class="hero-subtitle">Handcrafted with love, served with passion</p>
-            <button class="hero-button">Explore Our Flavors</button>
+            <button class="hero-button"><a href="<?= $base_path ?>modules/menu.php">Explore Our Flavors</button>
         </div>
         <!-- Animated ice cream icons -->
         <div class="floating-icons">
