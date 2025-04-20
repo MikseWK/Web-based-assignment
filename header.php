@@ -107,4 +107,6 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
         </div>
     </header>
 
-    
+    <body>
+        <main>
+            <h1><?= $_title ?? '' ?></h1>

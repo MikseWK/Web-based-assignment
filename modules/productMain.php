@@ -8,9 +8,9 @@ $_title = 'Product Maintenance';
 $fields = [
     'id'         => 'Id',
     'name'       => 'Name',
-    'category'     => 'Category',
-    'price' => 'Price',
-    'photo' => 'Photo',
+    'quantity'      => 'Quantity',
+    'price'      => 'Price',
+    'photo'      => 'Photo',
     ''
 ];
 
@@ -27,7 +27,7 @@ $p = new SimplePager("SELECT * FROM Product ORDER BY $sort $dir", [], 10, $page)
 $arr = $p->result;
 
 // ----------------------------------------------------------------------------
-$_title = 'Member Maintenance';
+$_title = 'Product Maintenance';
 include '../header.php';
 ?>
 
@@ -47,10 +47,21 @@ include '../header.php';
     <tr>
         <td><?= $s->id ?></td>
         <td><?= $s->name ?></td>
-        <td><?= $s->category ?></td>
+        <td>
+            <?php if ($s->quantity >= 100):?>
+                <div style="color: #90EE90;"><?= $s->quantity ?></div>
+            <?php elseif ($s->quantity >=50 && $s->quantity < 100):?>
+                <div style="color: #FFFF00;"><?= $s->quantity ?></div>
+            <?php elseif ($s->quantity >= 20 && $s->quantity < 50):?>
+                <div style="color: #FFA500;"><?= $s->quantity ?></div>
+            <?php else:?>
+                <div style="color: #FF0000;"><?= $s->quantity ?></div>
+            <?php endif;?>
+        </td>
         <td>RM<?= $s->price ?></td>
         <td><img src="/images/<?= $s->photo ?>"></td>
         <td>
+            <button data-get="productDetail.php?id=<?= $s->id ?>">Detail</button>
             <button data-get="productUpdate.php?id=<?= $s->id ?>">Update</button>
             <button data-post="productDelete.php?id=<?= $s->id ?>"data-confirm = "Delete this record?">Delete</button>
         </td>

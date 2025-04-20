@@ -1099,11 +1099,14 @@ label > * {
 }
 
 .form {
+    width: 100%;
     display: grid;
     grid: auto / auto auto auto;
+    align-items: center;
     gap: 5px;
-    place-content: start;
+    place-content: center;
     place-items: center start;
+    background-color: #D3589d;
 }
 
 .form > label:not(:has(*)) {
@@ -1115,6 +1118,48 @@ label > * {
 
 .form > section {
     grid-column: 1 / -1;
+}
+
+/* Tooltip styles */
+.tip {
+    position: relative;
+    display: inline-block;
+}
+
+.tip .tiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tip:hover .tiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.info-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 16px;
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: help;
 }
 
 /* product css */
@@ -1884,7 +1929,7 @@ label > * {
 
 .stock-table th {
     background-color: #000;
-    color: white;
+    color: #ff69b4;
     padding: 15px;
     text-align: left;
     font-weight: 500;
@@ -1903,6 +1948,21 @@ label > * {
 .stock-table tr:hover {
     background-color: #f9f9f9;
 }
+
+/* Sorting */
+.stock-table th a {
+    color: inherit;
+    display: block;
+}
+
+.stock-table th a.asc::after {
+    content: ' ▴';
+}
+
+.stock-table th a.desc::after {
+    content: ' ▾';
+}
+
 
 .item-image img {
     width: 60px;

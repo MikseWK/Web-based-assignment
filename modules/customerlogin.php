@@ -13,7 +13,7 @@ if (is_post()) {
     else if (!is_email($email)) {
         $_err['email'] = 'Invalid email';
     } else {
-        $stm = $_db->prepare('SELECT COUNT(*) FROM customers WHERE email = ?');
+        $stm = $_db->prepare('SELECT COUNT(*) FROM customer WHERE email = ?');
         $stm->execute([$email]);
 
         if ($stm->fetchColumn() == 0) {

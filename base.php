@@ -72,7 +72,6 @@ function is_email($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
 }
 
-
 function redirect($url = null) {
     $url ??= $_SERVER['REQUEST_URI'];
     header("Location: $url");    

@@ -20,11 +20,15 @@ if (is_get()) {
 }
 
 if (is_post()) { // part2: update
-    $id    = req('id');
-    $name  = req('name');
-    $price = req('price');
-    $f     = get_file('photo'); //get current chosen file
-    $photo = $_SESSION['photo']; // read session photo
+    $id          = req('id');
+    $name        = req('name');
+    $category    = req('category');
+    $Flavour     = req('Flavour');
+    $price       = req('price');
+    $f           = get_file('photo'); //get current chosen file
+    $photo       = $_SESSION['photo']; // read session photo
+    $Description = req('Description');
+    $quantity    = req('quantity');
 
     // Validate: name
     if ($name == '') {
@@ -32,6 +36,22 @@ if (is_post()) { // part2: update
     }
     else if (strlen($name) > 100) {
         $_err['name'] = 'Maximum 100 characters';
+    }
+
+    // Validate: category
+    if ($category == '') {
+        $_err['category'] = 'Required';
+    }
+    else if (strlen($category) > 100) {
+        $_err['category'] = 'Maximum 100 characters';
+    }
+    
+    // Validate: flavour
+    if ($Flavour == '') {
+        $_err['Flavour'] = 'Required';
+    }
+    else if (strlen($Flavour) > 20) {
+        $_err['Flavour'] = 'Maximum 20 characters';
     }
 
     // Validate: price
@@ -56,6 +76,25 @@ if (is_post()) { // part2: update
         }
     }
 
+    // Validate: description
+    if ($Description == '') {
+        $_err['Description'] = 'Required';
+    }
+    else if (strlen($Description) > 200) {
+        $_err['Description'] = 'Maximum 200 characters';
+    }    
+
+    // Validate: quantity
+    if ($quantity == '') {
+        $_err['quantity'] = 'Required';
+    }
+    else if (!preg_match('/^\d{1,3}$/', $quantity)) {
+        $_err['quantity'] = 'Must be Integer';
+    }
+    else if ($price < 0 || $price > 999) {
+        $_err['quantity'] = 'Must between 0 - 999';
+    }
+
     //DB operation
     if (!$_err) {
         // Delete photo + save photo
@@ -67,10 +106,10 @@ if (is_post()) { // part2: update
         
         $stm = $_db->prepare('
             UPDATE product
-            SET name = ?, price = ?, photo = ?
+            SET name = ?, category = ?, FLavour = ?, price = ?, photo = ?, Description = ?, quantity = ?
             WHERE id = ?
         ');
-        $stm->execute([$name, $price, $photo, $id]);
+        $stm->execute([$name, $category, $flavour, $price, $photo, $description, $quantity, $id]);
 
         $_SESSION['message'] = 'Record Updated';
         redirect('/modules/productMain.php');
@@ -84,7 +123,7 @@ include '../header.php';
 ?>
 
 <p>
-    <button data-get="/modules/productMain.php">Return</button>
+    <button data-get="/modules/productMain.php">Return to Product Maintenance</button>
 </p>
 
 <form method="post" class="form" enctype="multipart/form-data" novalidate>
@@ -96,15 +135,33 @@ include '../header.php';
     <?= html_text('name', 'maxlength="100"') ?>
     <?php if ($name == ''): ?> 
        <?= $_err['name'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
     <?php endif; ?>
-    <br>
+
+    <label for="category">Category</label>
+    <?= html_text('category', 'maxlength="100"') ?>
+    <?php if ($category == ''): ?> 
+       <?= $_err['category'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
+    <?php endif; ?>
+
+    <label for="Flavour">Flavour</label>
+    <?= html_text('Flavour', 'maxlength="20"') ?>
+    <?php if ($Flavour == ''): ?> 
+       <?= $_err['Flavour'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
+    <?php endif; ?>
 
     <label for="price">Price</label>
     <?= html_number('price', 0.01, 99.99, 0.01) ?>
     <?php if ($price == ''): ?> 
         <?= $_err['priced'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
     <?php endif; ?>
-    <br>
 
     <label for="photo">Photo</label>
     <label class="upload" tabindex="0">
@@ -113,8 +170,25 @@ include '../header.php';
     </label>
     <?php if ($photo == ''): ?> 
         <?= $_err['photo'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
     <?php endif; ?>
-    <br>
+
+    <label for="Description">Description</label>
+    <?= html_text('Description', 'maxlength="200"') ?>
+    <?php if ($Description == ''): ?> 
+       <?= $_err['Description'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
+    <?php endif; ?>
+
+    <label for="quantity">Quantity</label>
+    <?= html_number('quantity', 0, 999, 1) ?>
+    <?php if ($quantity == ''): ?> 
+        <?= $_err['quantity'] = 'Required' ?>
+    <?php else : ?>
+        <div></div>
+    <?php endif; ?> 
 
     <section>
         <button>Submit</button>

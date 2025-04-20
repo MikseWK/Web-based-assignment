@@ -113,7 +113,7 @@ include '../header.php';
         
             <li class="admin-profile-menu-item">
                 <i class="fas fa-shopping-basket"></i>
-                <a href="#manage-products">Manage Products</a>
+                <a href="productMain.php">Manage Products</a>
             </li>
             <li class="admin-profile-menu-item">
                 <i class="fas fa-chart-line"></i>
