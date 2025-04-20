@@ -11,7 +11,7 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Change the CSS path to use relative paths -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <!-- <link rel="stylesheet" href="css/checkout.css"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ADD THIS BELOW IF WANT  -->

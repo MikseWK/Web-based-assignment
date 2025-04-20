@@ -38,15 +38,45 @@ function req($key, $value = null) {
     return is_array($value) ? array_map('trim', $value) : trim($value);
 }
 
+// Obtain uploaded file --> cast to object
+function get_file($key) {
+    $f = $_FILES[$key] ?? null;
+    
+    if ($f && $f['error'] == 0) {
+        return (object)$f;
+    }
+
+    return null;
+}
+
+// Crop, resize and save photo
+function save_photo($f, $folder, $width = 200, $height = 200) {
+    $photo = uniqid() . '.jpg';
+    
+    require_once 'lib/SimpleImage.php';
+    $img = new SimpleImage();
+    $img->fromFile($f->tmp_name)
+        ->thumbnail($width, $height)
+        ->toFile("$folder/$photo", 'image/jpeg');
+
+    return $photo;
+}
+
+// Is money?
+function is_money($value) {
+    return preg_match('/^\-?\d+(\.\d{1,2})?$/', $value);
+}
+
+// Is email?
+function is_email($value) {
+    return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+}
+
 
 function redirect($url = null) {
     $url ??= $_SERVER['REQUEST_URI'];
     header("Location: $url");    
     exit();
-}
-
-function is_email($value) {
-    return filter_var($value, FILTER_VALIDATE_EMAIL) !== false; 
 }
 
 // Generate table headers <th>
@@ -229,14 +259,38 @@ function debug_cart_operation($operation, $product_id, $result) {
     return $result;
 }
 
-//temp
-function is_money($value) {
-    return preg_match('/^\-?\d+(\.\d{1,2})?$/', $value);
-}
 // Generate <input type='text'>
 function html_text($key, $attr = '') {
     $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='text' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='radio'> list
+function html_radios($key, $items, $br = false) {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo '<div>';
+    foreach ($items as $id => $text) {
+        $state = $id == $value ? 'checked' : '';
+        echo "<label><input type='radio' id='{$key}_$id' name='$key' value='$id' $state>$text</label>";
+        if ($br) {
+            echo '<br>';
+        }
+    }
+    echo '</div>';
+}
+
+// Generate <select>
+function html_select($key, $items, $default = '- Select One -', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<select id='$key' name='$key' $attr>";
+    if ($default !== null) {
+        echo "<option value=''>$default</option>";
+    }
+    foreach ($items as $id => $text) {
+        $state = $id == $value ? 'selected' : '';
+        echo "<option value='$id' $state>$text</option>";
+    }
+    echo '</select>';
 }
 
 // Generate <input type='number'>

@@ -29,29 +29,38 @@ $_title = 'Member Maintenance';
 include '../header.php';
 ?>
 
-<p class="pagination">
-    <?= $p->count ?> of <?= $p->item_count ?> record(s) |
-    Page <?= $p->page ?> of <?= $p->page_count ?>
-</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $_title ?></title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <p class="pagination">
+        <?= $p->count ?> of <?= $p->item_count ?> record(s) |
+        Page <?= $p->page ?> of <?= $p->page_count ?>
+    </p>
 
-<table class="table">
-    <tr>
-        <?= table_headers($fields, $sort, $dir, "page=$page") ?>
-    </tr>
+    <table class="table">
+        <tr>
+            <?= table_headers($fields, $sort, $dir, "page=$page") ?>
+        </tr>
 
-    <?php foreach ($arr as $s): ?>
-    <tr>
-        <td><?= $s->id ?></td>
-        <td><?= $s->name ?></td>
-        <td><?= $s->gender ?></td>
-        <td><?= $s->phoneNumber ?></td>
-    </tr>
-    <?php endforeach ?>
-</table>
+        <?php foreach ($arr as $s): ?>
+        <tr>
+            <td><?= $s->id ?></td>
+            <td><?= $s->name ?></td>
+            <td><?= $s->gender ?></td>
+            <td><?= $s->phoneNumber ?></td>
+        </tr>
+        <?php endforeach ?>
+    </table>
 
-<br>
+    <br>
 
-<?= $p->html("sort=$sort&dir=$dir") ?>
-
+    <?= $p->html("sort=$sort&dir=$dir") ?>
+</body>
 <?php
 include '../footer.php';
