@@ -74,7 +74,7 @@ $userArray = (array)$user;
         <div class="profile-card">
             <div class="profile-card-header">
                 <h2 class="profile-card-title">Personal Information</h2>
-                <button class="profile-edit-btn" id="editProfileBtn">
+                <button class="profile-edit-btn" id="editProfileBtn" >
                     <i class="fas fa-edit"></i> Change Profile Information
                 </button>
             </div>
@@ -89,27 +89,33 @@ $userArray = (array)$user;
                 
                 <div class="profile-info-row">
                     <div class="profile-info-label">Name</div>
-                    <div class="profile-info-value"><?= $userArray['name'] ?? 'Kazi Mohbub' ?></div>
+                    <div class="profile-info-value"><?= $userArray['name']?></div>
                 </div>
                 
                 <div class="profile-info-row">
                     <div class="profile-info-label">Date Of Birth</div>
-                    <div class="profile-info-value"><?= $userArray['dob'] ?? '20/01/2022' ?></div>
+                    <div class="profile-info-value"><?= $userArray['birthday']?></div>
                 </div>
                 
                 <div class="profile-info-row">
                     <div class="profile-info-label">Gender</div>
-                    <div class="profile-info-value"><?= $userArray['gender'] ?? 'Male' ?></div>
+                    <div class="profile-info-value">
+                        <?php if ($userArray['gender'] = 'M'):?>
+                            <?= 'Male'?>
+                        <?php else :?>
+                            <?= 'Female'?>
+                        <?php endif;?>
+                    </div>
                 </div>
                 
                 <div class="profile-info-row">
                     <div class="profile-info-label">Phone Number</div>
-                    <div class="profile-info-value"><?= $userArray['phone'] ?? '+90-12345678' ?></div>
+                    <div class="profile-info-value"><?= $userArray['phoneNumber'] ?></div>
                 </div>
                 
                 <div class="profile-info-row">
                     <div class="profile-info-label">Email</div>
-                    <div class="profile-info-value"><?= $userArray['email'] ?? 'abcd1234@email.com' ?></div>
+                    <div class="profile-info-value"><?= $userArray['email'] ?></div>
                 </div>
             </div>
             

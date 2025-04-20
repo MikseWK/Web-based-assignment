@@ -1,5 +1,5 @@
 <?php
-include '../_base.php';
+include '../base.php';
 
 auth('Admin');
 // ----------------------------------------------------------------------------
@@ -16,7 +16,6 @@ if (is_get()) {
     }
 
     extract((array)$p);
-    // TODO
     $_SESSION['photo'] = $p->photo;
 }
 
@@ -25,7 +24,7 @@ if (is_post()) { // part2: update
     $name  = req('name');
     $price = req('price');
     $f     = get_file('photo'); //get current chosen file
-    $photo = $_SESSION['photo']; // TODO read session photo
+    $photo = $_SESSION['photo']; // read session photo
 
     // Validate: name
     if ($name == '') {
@@ -57,35 +56,35 @@ if (is_post()) { // part2: update
         }
     }
 
-    // DB operation
-    // if (!$_err) {
-    //     // Delete photo + save photo
-    //     // ** Only if a file is selected **
-    //     if ($f) {
-    //         unlink("../photos/$photo"); //unlink and delete the old photo
-    //         $photo = save_photo($f, '../photos');   //save the new photo
-    //     }
+    //DB operation
+    if (!$_err) {
+        // Delete photo + save photo
+        // ** Only if a file is selected **
+        if ($f) {
+            unlink("../photos/$photo"); //unlink and delete the old photo
+            $photo = save_photo($f, '../photos');   //save the new photo
+        }
         
-    //     $stm = $_db->prepare('
-    //         UPDATE product
-    //         SET name = ?, price = ?, photo = ?
-    //         WHERE id = ?
-    //     ');
-    //     $stm->execute([$name, $price, $photo, $id]);
+        $stm = $_db->prepare('
+            UPDATE product
+            SET name = ?, price = ?, photo = ?
+            WHERE id = ?
+        ');
+        $stm->execute([$name, $price, $photo, $id]);
 
-    //     $_SESSION['message'] = 'Record Updated';
-    //     redirect('index.php');
-    // }
+        $_SESSION['message'] = 'Record Updated';
+        redirect('/modules/productMain.php');
+    }
 }
 
 // ----------------------------------------------------------------------------
 
-$_title = 'Product | Update';
-include '../_head.php';
+$_title = 'Product Update';
+include '../header.php';
 ?>
 
 <p>
-    <button data-get="index.php">Index</button>
+    <button data-get="/modules/productMain.php">Return</button>
 </p>
 
 <form method="post" class="form" enctype="multipart/form-data" novalidate>
@@ -95,18 +94,27 @@ include '../_head.php';
 
     <label for="name">Name</label>
     <?= html_text('name', 'maxlength="100"') ?>
-    <?= $_err('name') ?>
+    <?php if ($name == ''): ?> 
+       <?= $_err['name'] = 'Required' ?>
+    <?php endif; ?>
+    <br>
 
     <label for="price">Price</label>
     <?= html_number('price', 0.01, 99.99, 0.01) ?>
-    <?= $_err('price') ?>
+    <?php if ($price == ''): ?> 
+        <?= $_err['priced'] = 'Required' ?>
+    <?php endif; ?>
+    <br>
 
     <label for="photo">Photo</label>
     <label class="upload" tabindex="0">
         <?= html_file('photo', 'image/*', 'hidden') ?>
-        <img src="/photos/<?= $photo ?>">
+        <img src="/images/<?= $photo ?>">
     </label>
-    <?= $_err('photo') ?>
+    <?php if ($photo == ''): ?> 
+        <?= $_err['photo'] = 'Required' ?>
+    <?php endif; ?>
+    <br>
 
     <section>
         <button>Submit</button>
@@ -114,5 +122,6 @@ include '../_head.php';
     </section>
 </form>
 
+<script src="../js/app.js"></script>
 <?php
-include '../_foot.php';
+include '../footer.php';

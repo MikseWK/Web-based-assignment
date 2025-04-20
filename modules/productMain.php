@@ -34,9 +34,11 @@ include '../header.php';
 <p class="pagination">
     <?= $p->count ?> of <?= $p->item_count ?> record(s) |
     Page <?= $p->page ?> of <?= $p->page_count ?>
+    <br>
+    <button data-get="/modules/productAdd.php">Add Product</button>
 </p>
 
-<table class="table">
+<table class="stock-table">
     <tr>
         <?= table_headers($fields, $sort, $dir, "page=$page") ?>
     </tr>
@@ -50,7 +52,7 @@ include '../header.php';
         <td><img src="/images/<?= $s->photo ?>"></td>
         <td>
             <button data-get="productUpdate.php?id=<?= $s->id ?>">Update</button>
-            <button data-post="delete.php?id=<?= $s->id ?>">Delete</button>
+            <button data-post="productDelete.php?id=<?= $s->id ?>"data-confirm = "Delete this record?">Delete</button>
         </td>
     </tr>
     <?php endforeach ?>
@@ -60,5 +62,6 @@ include '../header.php';
 
 <?= $p->html("sort=$sort&dir=$dir") ?>
 
+<script src="../js/app.js"></script>
 <?php
 include '../footer.php';
