@@ -11,7 +11,7 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Change the CSS path to use relative paths -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <!-- <link rel="stylesheet" href="css/checkout.css"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- ADD THIS BELOW IF WANT  -->
@@ -45,21 +45,33 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
             </a>
         </div>
         
-        <nav>
-            <ul class="main-menu">
-                <?php if (isset($_SESSION['role']) && $_SESSION['role'] == 'Admin'): ?>
-                    <li><a href="<?= $base_path ?>modules/adminPage.php">Home</a></li>
-                    <li><a href="<?= $base_path ?>modules/memberMain.php">Member</a></li>
-                    <li><a href="<?= $base_path ?>modules/productMain.php">Product</a></li>
-                    <li><a href="<?= $base_path ?>modules/orderMain.php">Order</a></li>
-                <?php else: ?>
-                    <li><a href="<?= $base_path ?>index.php">Home</a></li>
-                    <li><a href="<?= $base_path ?>modules/aboutus.php">About Us</a></li>
-                    <li><a href="<?= $base_path ?>modules/menu.php">Menu</a></li>
-                    <li><a href="<?= $base_path ?>modules/contact.php">Contact</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
+  
+
+<nav>
+    <ul class="main-menu">
+        <?php if (isAdmin()): ?>
+            <!-- Admin menu -->
+            <li><a href="<?= $base_path ?>modules/adminPage.php">Home</a></li>
+            <li><a href="<?= $base_path ?>modules/memberMain.php">Member</a></li>
+            <li><a href="<?= $base_path ?>modules/productMain.php">Product</a></li>
+            <li><a href="<?= $base_path ?>modules/orderMain.php">Order</a></li>
+        <?php elseif  (isCustomer()): ?>
+            <!-- Logged-in customer menu - explicitly check all possible session variables -->
+            <li><a href="<?= $base_path ?>index.php">Home</a></li>
+            <li><a href="<?= $base_path ?>modules/aboutus.php">About Us</a></li>
+            <li><a href="<?= $base_path ?>modules/menu.php">Menu</a></li>
+            <li><a href="<?= $base_path ?>modules/contact.php">Contact</a></li>
+        <?php else: ?>
+            <!-- Not logged in - same links but redirect to login -->
+            <li><a href="<?= $base_path ?>index.php">Home</a></li>
+            <li><a href="javascript:void(0);" onclick="window.location.href='<?= $base_path ?>modules/customerlogin.php?redirect=aboutus'">About Us</a></li>
+            <li><a href="javascript:void(0);" onclick="window.location.href='<?= $base_path ?>modules/customerlogin.php?redirect=menu'">Menu</a></li>
+            <li><a href="javascript:void(0);" onclick="window.location.href='<?= $base_path ?>modules/customerlogin.php?redirect=contact'">Contact</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
+
         
         <div class="user-profile">
             <?php if ($_user): ?>

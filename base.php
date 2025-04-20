@@ -89,6 +89,11 @@ function isAdmin(): bool{
     return isset($_SESSION['role']) && $_SESSION['role'] == 'Admin';
 }
 
+function isCustomer(): bool{
+    return isset($_SESSION['role']) && $_SESSION['role'] == 'Customer';
+}
+
+
 // Authorization
 function auth(...$roles){
     global $_user;

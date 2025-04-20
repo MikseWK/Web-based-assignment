@@ -74,31 +74,7 @@ include '../header.php';
 
 <div class="admin-profile-container">
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Add inline styles for alerts -->
-    <style>
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-        
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        
-        .alert-danger {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-        
-        .alert i {
-            margin-right: 8px;
-        }
-    </style>
+    
     <aside class="admin-profile-sidebar">
         <div class="admin-profile-user-info">
             <img src="<?= isset($adminArray['profile_picture']) && !empty($adminArray['profile_picture']) ? $adminArray['profile_picture'] : '../assets/images/default-admin.png' ?>" alt="Admin Profile">
@@ -328,4 +304,23 @@ include '../header.php';
 <!-- Then include your app.js -->
 <script src="../js/app.js"></script>
 
+<script>
+$(document).ready(function() {
+    // Show the Add Admin form
+    $('#adminAddBtn').on('click', function() {
+        $('#adminAddForm').slideDown();
+        $(this).hide(); // Hide instead of disable for better UX
+    });
+    // Hide the Add Admin form
+    $('#adminCancelAdd').on('click', function() {
+        $('#adminAddForm').slideUp();
+        $('#adminAddBtn').show();
+    });
+
+    // If there was a validation error and the form is visible, keep the button hidden
+    if ($('#adminAddForm').is(':visible')) {
+        $('#adminAddBtn').hide();
+    }
+});
+</script>
 <?php include '../footer.php'; ?>
