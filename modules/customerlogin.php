@@ -29,7 +29,7 @@ if (is_post()) {
     // Login user
     if (empty($_err)) {
         $stm = $_db->prepare('
-            SELECT * FROM customers
+            SELECT * FROM customer
             WHERE email = ? AND password = SHA1(?)
         ');
         $stm->execute([$email, $password]);

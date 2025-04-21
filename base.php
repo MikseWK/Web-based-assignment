@@ -164,7 +164,7 @@ function get_cart_count() {
     }
     
     $user_id = get_user_id();
-    $stmt = $_db->prepare("SELECT SUM(quantity) as count FROM cart WHERE customer_id = ?");
+    $stmt = $_db->prepare("SELECT SUM(quantity) as count FROM cart WHERE user_id = ?");
     $stmt->execute([$user_id]);
     $result = $stmt->fetch(PDO::FETCH_OBJ);
     
@@ -184,7 +184,7 @@ function get_cart_items() {
         SELECT c.*, p.name, p.price, p.photo 
         FROM cart c
         JOIN product p ON c.product_id = p.id
-        WHERE c.customer_id = ?
+        WHERE c.user_id = ?
     ");
     $stmt->execute([$user_id]);
     
@@ -203,7 +203,7 @@ function get_cart_total() {
         SELECT SUM(c.quantity * p.price) as total
         FROM cart c
         JOIN product p ON c.product_id = p.id
-        WHERE c.customer_id = ?
+        WHERE c.user_id = ?
     ");
     $stmt->execute([$user_id]);
     $result = $stmt->fetch(PDO::FETCH_OBJ);
@@ -221,17 +221,17 @@ function add_to_cart($product_id, $quantity = 1) {
     $user_id = get_user_id();
     
     // Check if product already in cart
-    $stmt = $_db->prepare("SELECT * FROM cart WHERE customer_id = ? AND product_id = ?");
+    $stmt = $_db->prepare("SELECT * FROM cart WHERE user_id = ? AND product_id = ?");
     $stmt->execute([$user_id, $product_id]);
     $existing = $stmt->fetch(PDO::FETCH_OBJ);
     
     if ($existing) {
         // Update quantity
-        $stmt = $_db->prepare("UPDATE cart SET quantity = quantity + ? WHERE customer_id = ? AND product_id = ?");
+        $stmt = $_db->prepare("UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?");
         return $stmt->execute([$quantity, $user_id, $product_id]);
     } else {
         // Insert new item
-        $stmt = $_db->prepare("INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, ?)");
+        $stmt = $_db->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
         return $stmt->execute([$user_id, $product_id, $quantity]);
     }
 }
