@@ -244,7 +244,7 @@ function remove_from_cart($product_id) {
     }
     
     $user_id = get_user_id();
-    $stmt = $_db->prepare("DELETE FROM cart WHERE customer_id = ? AND product_id = ?");
+    $stmt = $_db->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
     return $stmt->execute([$user_id, $product_id]);
 }
 

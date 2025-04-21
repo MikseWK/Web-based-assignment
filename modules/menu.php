@@ -2,92 +2,113 @@
 require '../base.php';
 // ----------------------------------------------------------------------------
 
-// Fix the query to fetch all products without the assignment prefix
-$stmt = $_db->query('SELECT * FROM product');
-$arr = $stmt->fetchAll(PDO::FETCH_OBJ);
+// Check if search query is provided
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$category = isset($_GET['category']) ? trim($_GET['category']) : '';
 
-// Get cart count for the current user
-$cartCount = get_cart_count();
-$cartItems = get_cart_items();
-$cartTotal = get_cart_total();
+// Get all unique categories from the product table
+$categoriesStmt = $_db->query('SELECT DISTINCT category FROM assignment.product ORDER BY category');
+$categories = $categoriesStmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Handle add to cart action
-if (is_post() && isset($_POST['add_to_cart'])) {
-    $product_id = post('product_id');
-    $quantity = post('quantity', 1);
-    
-    // Remove debug output
-    // echo "<div style='background-color: #f8d7da; padding: 10px; margin: 10px;'>";
-    // echo "Adding to cart: Product ID = $product_id, Quantity = $quantity<br>";
-    // echo "</div>";
-    
-    if (is_logged_in()) {
-        $result = add_to_cart($product_id, $quantity);
-        
-        if ($result) {
-            // Refresh page to update cart
-            redirect($_SERVER['REQUEST_URI']);
-        }
-    } else {
-        // Redirect to login if not logged in
-        redirect('/modules/customerlogin.php');
-    }
-}
-
-// Handle remove from cart action
-if (is_post() && isset($_POST['remove_from_cart'])) {
-    $product_id = post('product_id');
-    
-    if (remove_from_cart($product_id)) {
-        // Refresh page to update cart
-        redirect($_SERVER['REQUEST_URI']);
-    }
+// Build the query based on filters
+if (!empty($search) && !empty($category)) {
+    // Filter by both search and category
+    $stmt = $_db->prepare('SELECT * FROM assignment.product WHERE name LIKE ? AND category = ?');
+    $stmt->execute(['%' . $search . '%', $category]);
+    $arr = $stmt->fetchAll(PDO::FETCH_OBJ);
+} elseif (!empty($search)) {
+    // Filter by search only
+    $stmt = $_db->prepare('SELECT * FROM assignment.product WHERE name LIKE ?');
+    $stmt->execute(['%' . $search . '%']);
+    $arr = $stmt->fetchAll(PDO::FETCH_OBJ);
+} elseif (!empty($category)) {
+    // Filter by category only
+    $stmt = $_db->prepare('SELECT * FROM assignment.product WHERE category = ?');
+    $stmt->execute([$category]);
+    $arr = $stmt->fetchAll(PDO::FETCH_OBJ);
+} else {
+    // No filters, get all products
+    $stmt = $_db->query('SELECT * FROM assignment.product');
+    $arr = $stmt->fetchAll(PDO::FETCH_OBJ);
 }
 
 // ----------------------------------------------------------------------------
 
 include '../header.php';
+
+// Get the current category name if selected
+$categoryName = "All Products";
+if (!empty($category)) {
+    $categoryName = $category;
+}
 ?>
 
-<h1>Our Products</h1>
-<link rel="stylesheet" href="../css/style.css">
+<h1><?= $categoryName ?></h1>
+
 <nav class="menu">
-    <div class="menu-bar">
-    <i class="fa-solid fa-bars-staggered"></i>
+    <div class="menu-bar" id="category-menu-toggle">
+        <i class="fa-solid fa-bars-staggered"></i>
     </div>
     <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search" />
+        <input type="text" id="product-search" placeholder="Search" value="<?= htmlspecialchars($search) ?>"/>
     </div>
     <div class="cart">
         <i class="fa-solid fa-cart-shopping"></i>
-        <span><?= $cartCount ?></span>
+        <span>0</span>
+    </div>
+    
+    <!-- Move the dropdown inside the menu for better positioning -->
+    <div class="category-dropdown" id="category-dropdown">
+        <ul>
+            <li<?= empty($category) ? ' class="active"' : '' ?>><a href="?<?= !empty($search) ? 'search='.urlencode($search) : '' ?>">All Products</a></li>
+            <?php if (!empty($categories)): ?>
+                <?php foreach ($categories as $cat): ?>
+                    <li<?= ($category === $cat) ? ' class="active"' : '' ?>><a href="?category=<?= urlencode($cat) ?><?= !empty($search) ? '&search='.urlencode($search) : '' ?>"><?= htmlspecialchars($cat) ?></a></li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li><a href="#">No categories found</a></li>
+            <?php endif; ?>
+        </ul>
     </div>
 </nav>
-    
-<div class="product-grid">
-    <?php foreach ($arr as $product): ?>
-        
-    <div class="product_class">
-        <div class="product" data-name="<?= $product->id ?>">
-            <img src="/images/<?= $product->photo ?>">
-            <h4 class="product-name"><?= $product->name?></h4>
 
-            <div class="product-price">
-                <div class="price">RM <?= $product->price?></div>
-                <!-- Modify form to include a unique ID and prevent default submission -->
-                <form method="post">
-                    <input type="hidden" name="product_id" value="<?= $product->id ?>">
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" name="add_to_cart" class="cart-button" style="background:none; border:none; cursor:pointer; padding:0;">
-                        <i class="fa-solid fa-cart-plus"></i>
-                    </button>
-                </form>
+<div class="product-grid">
+    <?php if (!empty($arr)): ?>
+        <?php foreach ($arr as $product): ?>
+            
+        <div class="product_class">
+            <div class="product" data-name="<?= $product->id ?>">
+                <img src="/images/<?= $product->photo ?>">
+                <h4 class="product-name"><?= $product->name?></h4>
+
+                <div class="product-price">
+                    <div class="price">RM <?= $product->price?></div>
+                    <i class="fa-solid fa-cart-plus"></i>
+                </div>
             </div>
+                    
         </div>
-                
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="no-products">No products found matching your criteria</div>
+    <?php endif; ?>
+</div>
+
+<!-- Product Description Popup -->
+<div id="product-description-popup" class="product-popup">
+    <div class="popup-content">
+        <span class="close-popup">&times;</span>
+        <h3 id="popup-product-name"></h3>
+        <div id="popup-product-image"></div>
+        <p id="popup-product-description"></p>
+        <div class="popup-price-container">
+            <span id="popup-product-price"></span>
+            <button id="popup-close-description" class="close-description-btn">
+                Close Description
+            </button>
+        </div>
     </div>
-    <?php endforeach; ?>
 </div>
 
 <!-- cart slideshow -->
@@ -98,43 +119,20 @@ include '../header.php';
 
     <div class="cart-menu">
         <h3>My Cart</h3>
-        <div class="cart-item">
-            <?php if (empty($cartItems)): ?>
-                <p>Your cart is empty</p>
-            <?php else: ?>
-                <?php foreach ($cartItems as $item): ?>
-                    <div class="individual-cart-item">
-                        <div class="cart-item-details">
-                            <?= $item->name ?> (x<?= $item->quantity ?>)
-                        </div>
-                        <div class="cart-item-price">
-                            <div>RM <?= number_format($item->price * $item->quantity, 2) ?></div>
-                            <form method="post">
-                                <input type="hidden" name="product_id" value="<?= $item->product_id ?>">
-                                <button type="submit" name="remove_from_cart" class="remove-btn">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
+        <div class="cart-item"></div>
     </div>
 
     <div class="sidebar-footer">
         <div class="total-amount">
             <h5>Total</h5>
-            <div class="cart-total">RM<?= number_format($cartTotal, 2) ?></div>
+            <div class="cart-total">RM0.00</div>
         </div>
-        <!-- Ensure this button's disabled state depends on $cartItems -->
-        <button class="checkout-btn" onclick="window.location.href='checkout.php'" <?= empty($cartItems) ? 'disabled' : '' ?>>Checkout</button>
+        <button class="checkout-btn">Checkout</button>
     </div>
 </div>
 
-<!-- Removed the duplicate cart popup section in the previous step -->
-
 <script src="../js/app.js"></script>
+<script src="../js/menu.js"></script>
 <?php
 include '../footer.php';
 ?>

@@ -57,11 +57,6 @@ $(() => {
 
 });
 
-//
-
-
-
-
 //modify stocks
 document.addEventListener('DOMContentLoaded', function() {
     // Search functionality
@@ -868,50 +863,3 @@ function initPaymentPage() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const cartIcon = document.querySelector('.menu .cart'); 
-    const sidebar = document.getElementById('sidebar');
-    const closeButton = document.querySelector('.sidebar-close i');
-    const checkoutButton = document.querySelector('.checkout');
-
-    // Cart icon click handler to open sidebar
-    if (cartIcon && sidebar) {
-        cartIcon.addEventListener('click', (event) => {
-            event.stopPropagation();
-            sidebar.classList.add('open');
-        });
-    }
-
-    // Close button handler
-    if (closeButton && sidebar) {
-        closeButton.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-        });
-    }
-
-    // Add checkout button handler to check if cart is empty
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', (event) => {
-            const cartItems = document.querySelectorAll('.individual-cart-item');
-            const cartTotal = parseFloat(document.querySelector('.cart-total')?.textContent.replace('RM', '') || '0');
-            
-            if (cartItems.length === 0 || cartTotal <= 0) {
-                event.preventDefault(); // Prevent the default action (navigation)
-                alert('Your cart is empty!'); // Show alert
-                // Don't redirect - just stay on the current page
-            }
-            // If cart has items, the default action will proceed to checkout
-        });
-    }
-
-    // Optional: Close sidebar when clicking outside of it
-    if (sidebar) {
-        document.addEventListener('click', (event) => {
-            if (sidebar.classList.contains('open') &&
-                !sidebar.contains(event.target) &&
-                !cartIcon.contains(event.target)) {
-                sidebar.classList.remove('open');
-            }
-        });
-    }
-});
