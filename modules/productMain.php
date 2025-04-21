@@ -49,7 +49,7 @@ include '../header.php';
         <td><?= $s->name ?></td>
         <td>
             <?php if ($s->quantity >= 100):?>
-                <div style="color: #90EE90;"><?= $s->quantity ?></div>
+                <div style="color: #57E964;"><?= $s->quantity ?></div>
             <?php elseif ($s->quantity >=50 && $s->quantity < 100):?>
                 <div style="color: #FFFF00;"><?= $s->quantity ?></div>
             <?php elseif ($s->quantity >= 20 && $s->quantity < 50):?>

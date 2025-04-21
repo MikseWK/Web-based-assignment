@@ -109,7 +109,7 @@ if (is_post()) { // part2: update
             SET name = ?, category = ?, FLavour = ?, price = ?, photo = ?, Description = ?, quantity = ?
             WHERE id = ?
         ');
-        $stm->execute([$name, $category, $flavour, $price, $photo, $description, $quantity, $id]);
+        $stm->execute([$name, $category, $Flavour, $price, $photo, $Description, $quantity, $id]);
 
         $_SESSION['message'] = 'Record Updated';
         redirect('/modules/productMain.php');
@@ -175,7 +175,7 @@ include '../header.php';
     <?php endif; ?>
 
     <label for="Description">Description</label>
-    <?= html_text('Description', 'maxlength="200"') ?>
+    <?= html_textarea('Description', 'maxlength="200"') ?>
     <?php if ($Description == ''): ?> 
        <?= $_err['Description'] = 'Required' ?>
     <?php else : ?>

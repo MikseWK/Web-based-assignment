@@ -263,10 +263,48 @@ function debug_cart_operation($operation, $product_id, $result) {
     return $result;
 }
 
+// Generate <input type='hidden'>
+function html_hidden($key, $attr = '') {
+    $value ??= encode($GLOBALS[$key] ?? '');
+    echo "<input type='hidden' id='$key' name='$key' value='$value' $attr>";
+}
+
 // Generate <input type='text'>
 function html_text($key, $attr = '') {
     $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='text' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='password'>
+function html_password($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='password' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <input type='number'>
+function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='number' id='$key' name='$key' value='$value'
+                 min='$min' max='$max' step='$step' $attr>";
+}
+
+// Generate <input type='search'>
+function html_search($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<input type='search' id='$key' name='$key' value='$value' $attr>";
+}
+
+// Generate <textarea>
+function html_textarea($key, $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    echo "<textarea id='$key' name='$key' $attr>$value</textarea>";
+}
+
+// Generate SINGLE <input type='checkbox'>
+function html_checkbox($key, $label = '', $attr = '') {
+    $value = encode($GLOBALS[$key] ?? '');
+    $status = $value == 1 ? 'checked' : '';
+    echo "<label><input type='checkbox' id='$key' name='$key' value='1' $status $attr>$label</label>";
 }
 
 // Generate <input type='radio'> list
@@ -297,12 +335,6 @@ function html_select($key, $items, $default = '- Select One -', $attr = '') {
     echo '</select>';
 }
 
-// Generate <input type='number'>
-function html_number($key, $min = '', $max = '', $step = '', $attr = '') {
-    $value = encode($GLOBALS[$key] ?? '');
-    echo "<input type='number' id='$key' name='$key' value='$value'
-                 min='$min' max='$max' step='$step' $attr>";
-}
 // Generate <input type='file'>
 function html_file($key, $accept = '', $attr = '') {
     echo "<input type='file' id='$key' name='$key' accept='$accept' $attr>";
