@@ -265,7 +265,7 @@ function debug_cart_operation($operation, $product_id, $result) {
 
 // Generate <input type='hidden'>
 function html_hidden($key, $attr = '') {
-    $value ??= encode($GLOBALS[$key] ?? '');
+    $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='hidden' id='$key' name='$key' value='$value' $attr>";
 }
 
