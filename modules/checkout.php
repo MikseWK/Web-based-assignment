@@ -41,7 +41,7 @@ include '../header.php';
                 <div class="product-list">
                     <?php foreach ($cartItems as $item): ?>
                         <div class="checkout-item">
-                            <img src="../images/<?php echo $item->image ?? 'default.jpg'; ?>" alt="<?php echo htmlspecialchars($item->name); ?>" class="checkout-item-image">
+                            <img src="../images/<?php echo $item->photo ?? 'default.jpg'; ?>" alt="<?php echo htmlspecialchars($item->name); ?>" class="checkout-item-image">
                             <div class="checkout-item-details">
                                 <div class="checkout-item-name"><?php echo htmlspecialchars($item->name); ?></div>
                                 <div class="checkout-item-price">RM<?php echo number_format($item->price, 2); ?></div>

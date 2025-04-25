@@ -89,15 +89,21 @@ if (is_post()) {
 
     // Output
     if (!$_err) {
-        // Save the uploaded photo
-        $photo = save_photo($f, '../photos');
+        // Genrate photo name to save
+        $photo = $name. '.jpg';
+
+        require_once '../lib/SimpleImage.php';
+        $img = new SimpleImage();
+        $img->fromFile($f->tmp_name)
+            ->resize(200, 200)
+            ->toFile("../images/$photo", 'image/jpeg');
         
         // Insert the new product
         $stm = $_db->prepare('INSERT INTO product
-                                (id, name, category, Falvour, price, photo, Description, quantity)
+                                (id, name, category, Flavour, price, photo, Description, quantity)
                                 VALUES(?, ?, ?, ?, ?, ?, ?, 0)
                             ');
-        $stm->execute([$id, $name, $category, $flavour, $price, $photo, $description]);
+        $stm->execute([$id, $name, $category, $Flavour, $price, $photo, $Description]);
         
         $_SESSION['message'] = 'Product added successfully';
         redirect('/modules/productMain.php');

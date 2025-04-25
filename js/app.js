@@ -55,68 +55,86 @@ $(() => {
         e.target.setSelectionRange(a, b);
     });
 
+    // Photo preview
+    $('label.upload input[type=file]').on('change', e => {
+    const f = e.target.files[0];
+    const img = $(e.target).siblings('img')[0];
+
+    if (!img) return;
+
+    img.dataset.src ??= img.src;
+
+    if (f?.type.startsWith('image/')) {
+        img.src = URL.createObjectURL(f);
+    }
+    else {
+        img.src = img.dataset.src;
+        e.target.value = '';
+    }
+    });
+
 });
 
 //modify stocks
-document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInput = document.getElementById('stockSearch');
-    searchInput.addEventListener('keyup', function() {
-        const searchTerm = this.value.toLowerCase();
-        const stockItems = document.querySelectorAll('.stock-item');
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Search functionality
+//     const searchInput = document.getElementById('stockSearch');
+//     searchInput.addEventListener('keyup', function() {
+//         const searchTerm = this.value.toLowerCase();
+//         const stockItems = document.querySelectorAll('.stock-item');
         
-        stockItems.forEach(item => {
-            const name = item.querySelector('.item-name').textContent.toLowerCase();
-            const description = item.querySelector('.item-description').textContent.toLowerCase();
+//         stockItems.forEach(item => {
+//             const name = item.querySelector('.item-name').textContent.toLowerCase();
+//             const description = item.querySelector('.item-description').textContent.toLowerCase();
             
-            if (name.includes(searchTerm) || description.includes(searchTerm)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
+//             if (name.includes(searchTerm) || description.includes(searchTerm)) {
+//                 item.style.display = '';
+//             } else {
+//                 item.style.display = 'none';
+//             }
+//         });
+//     });
     
-    // Filter functionality
-    const filterSelect = document.getElementById('stockFilter');
-    filterSelect.addEventListener('change', function() {
-        const filterValue = this.value;
-        const stockItems = document.querySelectorAll('.stock-item');
+//     // Filter functionality
+//     const filterSelect = document.getElementById('stockFilter');
+//     filterSelect.addEventListener('change', function() {
+//         const filterValue = this.value;
+//         const stockItems = document.querySelectorAll('.stock-item');
         
-        stockItems.forEach(item => {
-            if (filterValue === 'all') {
-                item.style.display = '';
-            } else if (filterValue === 'low') {
-                const stockValue = parseInt(item.querySelector('.item-stock').textContent.trim());
-                item.style.display = (stockValue < 10 && stockValue > 0) ? '' : 'none';
-            } else if (filterValue === 'out') {
-                const stockValue = parseInt(item.querySelector('.item-stock').textContent.trim());
-                item.style.display = (stockValue <= 0) ? '' : 'none';
-            }
-        });
-    });
+//         stockItems.forEach(item => {
+//             if (filterValue === 'all') {
+//                 item.style.display = '';
+//             } else if (filterValue === 'low') {
+//                 const stockValue = parseInt(item.querySelector('.item-stock').textContent.trim());
+//                 item.style.display = (stockValue < 10 && stockValue > 0) ? '' : 'none';
+//             } else if (filterValue === 'out') {
+//                 const stockValue = parseInt(item.querySelector('.item-stock').textContent.trim());
+//                 item.style.display = (stockValue <= 0) ? '' : 'none';
+//             }
+//         });
+//     });
     
-    // Increment and decrement buttons
-    const incrementBtns = document.querySelectorAll('.increment-btn');
-    const decrementBtns = document.querySelectorAll('.decrement-btn');
+//     // Increment and decrement buttons
+//     const incrementBtns = document.querySelectorAll('.increment-btn');
+//     const decrementBtns = document.querySelectorAll('.decrement-btn');
     
-    incrementBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const input = this.parentElement.querySelector('.stock-input');
-            input.value = parseInt(input.value) + 1;
-        });
-    });
+//     incrementBtns.forEach(btn => {
+//         btn.addEventListener('click', function() {
+//             const input = this.parentElement.querySelector('.stock-input');
+//             input.value = parseInt(input.value) + 1;
+//         });
+//     });
     
-    decrementBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const input = this.parentElement.querySelector('.stock-input');
-            const currentValue = parseInt(input.value);
-            if (currentValue > 0) {
-                input.value = currentValue - 1;
-            }
-        });
-    });
-});
+//     decrementBtns.forEach(btn => {
+//         btn.addEventListener('click', function() {
+//             const input = this.parentElement.querySelector('.stock-input');
+//             const currentValue = parseInt(input.value);
+//             if (currentValue > 0) {
+//                 input.value = currentValue - 1;
+//             }
+//         });
+//     });
+// });
 
 
 // admin page
@@ -642,27 +660,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Edit/Delete Admin functionality
-        const adminEditBtns = document.querySelectorAll('.admin-edit-btn:not([disabled])');
-        const adminDeleteBtns = document.querySelectorAll('.admin-delete-btn:not([disabled])');
+        // // Edit/Delete Admin functionality
+        // const adminEditBtns = document.querySelectorAll('.admin-edit-btn:not([disabled])');
+        // const adminDeleteBtns = document.querySelectorAll('.admin-delete-btn:not([disabled])');
         
-        adminEditBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const adminItem = this.closest('.admin-list-item');
-                const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
-                alert('Edit admin: ' + adminName + ' (To be implemented)');
-            });
-        });
+        // adminEditBtns.forEach(btn => {
+        //     btn.addEventListener('click', function() {
+        //         const adminItem = this.closest('.admin-list-item');
+        //         const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
+        //         alert('Edit admin: ' + adminName + ' (To be implemented)');
+        //     });
+        // });
         
-        adminDeleteBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const adminItem = this.closest('.admin-list-item');
-                const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
-                if (confirm('Are you sure you want to delete admin: ' + adminName + '?')) {
-                    alert('Delete admin: ' + adminName + ' (To be implemented)');
-                }
-            });
-        });
+        // adminDeleteBtns.forEach(btn => {
+        //     btn.addEventListener('click', function() {
+        //         const adminItem = this.closest('.admin-list-item');
+        //         const adminName = adminItem.querySelector('.admin-list-col:first-child').textContent;
+        //         if (confirm('Are you sure you want to delete admin: ' + adminName + '?')) {
+        //             alert('Delete admin: ' + adminName + ' (To be implemented)');
+        //         }
+        //     });
+        // });
     }
 });
 // Admin Profile Page - Add Admin functionality
@@ -863,3 +881,153 @@ function initPaymentPage() {
     });
 }
 
+// Product description popup functionality
+$(document).ready(function() {
+    // Get the popup elements
+    const popup = document.getElementById('product-description-popup');
+    const closePopup = document.querySelector('.close-popup');
+    const popupProductName = document.getElementById('popup-product-name');
+    const popupProductImage = document.getElementById('popup-product-image');
+    const popupProductDescription = document.getElementById('popup-product-description');
+    const popupProductPrice = document.getElementById('popup-product-price');
+    const popupCloseDescriptionBtn = document.getElementById('popup-close-description');
+    
+    // Add click event to "Detail" buttons
+    $('.popup').on('click', function() {
+        const productId = $(this).data('name');
+        const productRow = $(this).closest('tr');
+        const productName = productRow.find('td:nth-child(2)').text();
+        const productPrice = productRow.find('td:nth-child(4)').text();
+        const productImageSrc = productRow.find('img').attr('src');
+        
+        console.log('Detail button clicked:', productId, productName);
+        
+        // Fetch product description from the server
+        $.ajax({
+            url: '/modules/cart_actions.php',
+            type: 'GET',
+            data: { 
+                action: 'get_description',
+                product_id: productId 
+            },
+            success: function(response) {
+                try {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        // Populate the popup with product details
+                        popupProductName.textContent = productName;
+                        popupProductImage.innerHTML = `<img src="${productImageSrc}" alt="${productName}">`;
+                        popupProductDescription.textContent = result.description;
+                        popupProductPrice.textContent = productPrice;
+                        
+                        // Show the popup
+                        popup.style.display = 'flex';
+                        
+                        // Prevent scrolling on the body
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        showToast(result.message || 'Failed to load product description', 'error');
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                    showToast('Error loading product description', 'error');
+                }
+            },
+            error: function() {
+                showToast('Error connecting to server', 'error');
+            }
+        });
+    });
+    
+    // Function to close the popup
+    function closeProductPopup() {
+        popup.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+    
+    // Close popup when clicking the close button (X)
+    closePopup.addEventListener('click', closeProductPopup);
+    
+    // Close popup when clicking the "Close Description" button
+    $(popupCloseDescriptionBtn).on('click', closeProductPopup);
+    
+    // Close popup when clicking outside the content
+    window.addEventListener('click', function(event) {
+        if (event.target === popup) {
+            closeProductPopup();
+        }
+    });
+});
+
+//select all product
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAll = document.getElementById('select-all-product');
+    const checkboxes = document.querySelectorAll('input[name="productSelected[]"]');
+
+    selectAll.addEventListener('change', function() {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+        });
+    });
+
+function check(){
+    const selectedIds = Array.from(checkboxes)
+    .filter(cb => cb.checked)
+    .map(cb => cb.value);
+
+    if (selectedIds.length === 0) {
+    alert("Please select at least one product.");
+    return false;
+    } else {
+    return true;
+    }
+}
+
+ // Batch activate
+ document.getElementById('batch-activate').addEventListener('click', function() {
+    if (check()) {
+        batchAction('activate');
+    }
+});
+
+// Batch disable
+document.getElementById('batch-disable').addEventListener('click', function() {
+    if (check()) {
+        batchAction('disable');
+    }
+});
+
+// Batch add quantity
+document.getElementById('batch-add-quantity').addEventListener('click', function() {
+   if (check() ) {
+        const quantity = prompt("Enter the new quantity for selected products:");
+        if (quantity !== null) {
+            batchAction('add-quantity', quantity);
+        }
+    }
+});
+
+function batchAction(action, value = null) {
+
+    const form = document.getElementById('batch-actions-form');
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'action';
+    input.value = action;
+    form.appendChild(input);
+
+    const idsInput = document.createElement('input');
+    idsInput.type = 'hidden';
+    idsInput.name = 'ids';
+    idsInput.value = selectedIds.join(',');
+    form.appendChild(idsInput);
+
+    if (value !== null) {
+        const valueInput = document.createElement('input');
+        valueInput.type = 'hidden';
+        valueInput.name = 'value';
+        valueInput.value = value;
+        form.appendChild(valueInput);
+    }
+}
+});

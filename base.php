@@ -101,16 +101,16 @@ $_err = [];
 //Global user object
 $_user = $_SESSION['user'] ?? null;
 
-//Login user
-function login($user, $url){
+// Login user
+function login($user, $url = '/') {
     $_SESSION['user'] = $user;
-    redirect($url ?? '/index.php');
+    redirect($url);
 }
 
-//Logout user
-function logout($url){
+// Logout user
+function logout($url = '/') {
     unset($_SESSION['user']);
-    redirect($url ?? '/index.php');
+    redirect($url);
 }
 
 //Verify is admin

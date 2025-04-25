@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mkdir($uploadDir, 0777, true);
         }
         
-        $fileName = 'admin_' . $adminId . '_' . time() . '_' . basename($_FILES['profile_picture']['name']);
+        $fileName = 'admin_' . $adminId . '.jpg';
         $uploadFile = $uploadDir . $fileName;
         
         if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $uploadFile)) {
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $types = "ssss";
     
     if ($profilePicturePath) {
-        $query .= ", profilePicture = ?"; // Use 'profilePicture' as per your database schema
+        $query .= ", profile_picture = ?"; // Use 'profile_picture' as per your database schema
         $params[] = $profilePicturePath;
         $types .= "s";
     }

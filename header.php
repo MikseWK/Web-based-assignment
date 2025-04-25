@@ -78,12 +78,7 @@ if (strpos($_SERVER['PHP_SELF'], '/modules/') !== false) {
                 <!-- User is logged in -->
                 <div class="dropdown">
                     <div class="profile-pic-container">
-                        <!-- Need change -->
-                        <?php if (isset($_SESSION['profile_picture']) && $_SESSION['profile_picture']): ?>
-                            <img src="/<?= $_SESSION['profile_picture'] ?>" alt="Profile" class="profile-pic">
-                        <?php else: ?>
-                            <img src="/assets/images/default-user.png" alt="Profile" class="profile-pic">
-                        <?php endif; ?>
+                        <img src=<?= "$_user->profile_picture" ?? "/assets/images/default-user.png"?> alt="Profile" class="profile-pic">
                     </div>
                     <div class="dropdown-content">
                         <?php if (isAdmin()): ?>
