@@ -13,10 +13,58 @@ if (!is_logged_in()) {
 }
 
 $customer_id = get_user_id();
+$order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : null;
 
 // Get cart items directly from the cart table
 $cartItems = get_cart_items();
 $cartTotal = get_cart_total();
+
+// If no order ID is provided, create one or redirect to cart
+if (!$order_id) {
+    // Check if cart has items
+    if (empty($cartItems)) {
+        header('Location: menu.php');
+        exit;
+    }
+    
+    // Create order and redirect
+    $order_id = create_order_from_cart();
+    if ($order_id) {
+        header('Location: checkout.php?order_id=' . $order_id);
+        exit;
+    } else {
+        // Failed to create order
+        header('Location: menu.php?error=failed_to_create_order');
+        exit;
+    }
+}
+
+// Get order details - Updated to use 'customer' instead of 'customers'
+$stmt = $_db->prepare("
+    SELECT o.*, c.name as customer_name, c.email as customer_email 
+    FROM orders o
+    JOIN customer c ON o.user_id = c.id
+    WHERE o.id = ? AND o.user_id = ?
+");
+$stmt->execute([$order_id, $customer_id]);
+$order = $stmt->fetch(PDO::FETCH_OBJ);
+
+if (!$order) {
+    // Order not found or doesn't belong to this user
+    header('Location: menu.php');
+    exit;
+}
+
+// Get order items
+$stmt = $_db->prepare("
+    SELECT oi.*, p.name, p.price, p.photo 
+    FROM orderitem oi
+    JOIN product p ON oi.product_id = p.id
+    WHERE oi.order_id = ?
+");
+$stmt->execute([$order_id]);
+$orderItems = $stmt->fetchAll(PDO::FETCH_OBJ);
+$orderTotal = $order->total;
 
 include '../header.php';
 ?>
@@ -24,11 +72,11 @@ include '../header.php';
 <link rel="stylesheet" href="../css/checkout.css">
 
 <main class="main-content">
-    <?php if (empty($cartItems)): ?>
+    <?php if (empty($orderItems)): ?>
         <div class="checkout-container">
             <div class="checkout-items">
                 <h2 class="checkout-title">Checkout</h2>
-                <div class="alert alert-info">Your cart is empty.</div>
+                <div class="alert alert-info">Your order is empty.</div>
                 <a href="menu.php" class="btn btn-primary">Continue Shopping</a>
             </div>
         </div>
@@ -39,9 +87,9 @@ include '../header.php';
                 
                 <!-- Product List -->
                 <div class="product-list">
-                    <?php foreach ($cartItems as $item): ?>
+                    <?php foreach ($orderItems as $item): ?>
                         <div class="checkout-item">
-                            <img src="../images/<?php echo $item->image ?? 'default.jpg'; ?>" alt="<?php echo htmlspecialchars($item->name); ?>" class="checkout-item-image">
+                            <img src="../images/<?php echo $item->photo ?? 'default.jpg'; ?>" alt="<?php echo htmlspecialchars($item->name); ?>" class="checkout-item-image">
                             <div class="checkout-item-details">
                                 <div class="checkout-item-name"><?php echo htmlspecialchars($item->name); ?></div>
                                 <div class="checkout-item-price">RM<?php echo number_format($item->price, 2); ?></div>
@@ -100,7 +148,7 @@ include '../header.php';
     <h2 class="checkout-title">Order Summary</h2>
     <div class="checkout-summary-row">
         <span>Subtotal</span>
-        <span>RM<?php echo number_format($cartTotal, 2); ?></span>
+        <span>RM<?php echo number_format($orderTotal, 2); ?></span>
     </div>
     <div class="checkout-summary-row">
         <span>Shipping</span>
@@ -112,11 +160,11 @@ include '../header.php';
     </div>
     <div class="checkout-summary-row checkout-total">
         <span>Total</span>
-        <span>RM<?php echo number_format($cartTotal + 5.00, 2); ?></span>
+        <span>RM<?php echo number_format($orderTotal + 5.00, 2); ?></span>
     </div>
     
     <form id="payment-form" action="process_payment.php" method="POST">
-        <input type="hidden" name="total" value="<?php echo $cartTotal + 5.00; ?>">
+        <input type="hidden" name="total" value="<?php echo $orderTotal + 5.00; ?>">
         <input type="hidden" name="shipping_method" id="shipping_method" value="doorstep">
         <div id="card-element">
             <!-- A Stripe Element will be inserted here. -->
@@ -127,6 +175,9 @@ include '../header.php';
             <span id="button-text">Pay Now</span>
             <span id="spinner" class="spinner hidden"></span>
         </button>
+        <!-- Add this inside your payment form -->
+        <input type="hidden" id="order_id" name="order_id" value="<?php echo $order_id; ?>">
+        <input type="hidden" id="total_amount" name="total_amount" value="<?php echo $orderTotal; ?>">
     </form>
     <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">
         By placing your order, you agree to our Terms of Service and Privacy Policy
@@ -191,8 +242,38 @@ $(document).ready(function() {
             spinner.classList.add('hidden');
             buttonText.classList.remove('hidden');
         } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-            // Payment successful, redirect or show success
-            window.location.href = 'order_confirmation.php?payment_intent=' + paymentIntent.id;
+            console.log("Payment succeeded! Updating order status...");
+            
+            // Get the order ID from the form
+            const orderId = document.getElementById("order_id").value;
+            
+            // Step 3: Update order status directly here
+            try {
+                const updateResponse = await fetch('update_order_status_direct.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `order_id=${orderId}&status=Success&payment_intent=${paymentIntent.id}`
+                });
+                
+                const updateResult = await updateResponse.json();
+                console.log("Update status response:", updateResult);
+                
+                if (updateResult.success) {
+                    console.log("Order status updated successfully!");
+                    // Redirect to order confirmation page instead of payment_success.php
+                    window.location.href = 'order_confirmation.php?payment_intent=' + paymentIntent.id;
+                } else {
+                    console.error("Failed to update order status:", updateResult.error);
+                    // Still redirect to order confirmation page since payment was successful
+                    window.location.href = 'order_confirmation.php?payment_intent=' + paymentIntent.id;
+                }
+            } catch (updateErr) {
+                console.error("Error updating order status:", updateErr);
+                // Still redirect to order confirmation page since payment was successful
+                window.location.href = 'order_confirmation.php?payment_intent=' + paymentIntent.id;
+            }
         }
     });
 

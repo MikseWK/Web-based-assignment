@@ -258,12 +258,75 @@ function is_exists($value, $table, $field) {
 
 
 // Debug function to check cart operations
+function debug_cart() {
+    echo '<pre>';
+    print_r(get_cart_items());
+    echo '</pre>';
+}
+
+// Create a new order from cart items
+function create_order_from_cart() {
+    global $_db;
+    
+    if (!is_logged_in()) {
+        return false;
+    }
+    
+    $user_id = get_user_id();
+    $cart_items = get_cart_items();
+    
+    if (empty($cart_items)) {
+        return false;
+    }
+    
+    // Calculate totals
+    $count = 0;
+    $total = 0;
+    
+    foreach ($cart_items as $item) {
+        $count += $item->quantity;
+        $total += ($item->price * $item->quantity);
+    }
+    
+    try {
+        // Start transaction
+        $_db->beginTransaction();
+        
+        // Create order record - Using 'user_id' to match the column in orders table
+        $stmt = $_db->prepare("INSERT INTO `orders` (user_id, count, total, datetime, status) VALUES (?, ?, ?, NOW(), 'Pending')");
+        $stmt->execute([$user_id, $count, $total]);
+        $order_id = $_db->lastInsertId();
+        
+        // Add items to orderitem table - Modified to use product_id directly without cart_id
+        foreach ($cart_items as $item) {
+            $subtotal = $item->price * $item->quantity;
+            // Remove cart_id from the query since it might be causing foreign key constraint issues
+            $stmt = $_db->prepare("INSERT INTO `orderitem` (order_id, product_id, quantity, subtotal) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$order_id, $item->product_id, $item->quantity, $subtotal]);
+        }
+        
+        // Clear cart
+        $stmt = $_db->prepare("DELETE FROM cart WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        
+        // Commit transaction
+        $_db->commit();
+        
+        return $order_id;
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $_db->rollBack();
+        error_log("Order creation failed: " . $e->getMessage());
+        return false;
+    }
+}
+
+// Debug function to check cart operations
 function debug_cart_operation($operation, $product_id, $result) {
     error_log("Cart $operation: Product ID = $product_id, Result = " . ($result ? 'Success' : 'Failed'));
     return $result;
 }
 
-// Generate <input type='hidden'>
 function html_hidden($key, $attr = '') {
     $value = encode($GLOBALS[$key] ?? '');
     echo "<input type='hidden' id='$key' name='$key' value='$value' $attr>";

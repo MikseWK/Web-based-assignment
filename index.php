@@ -16,7 +16,7 @@ include 'header.php';
         <div class="hero-content">
             <h1 class="hero-title">Indulge in Premium Ice Cream</h1>
             <p class="hero-subtitle">Handcrafted with love, served with passion</p>
-            <button class="hero-button"><a href="<?= $base_path ?>modules/menu.php">Explore Our Flavors</button>
+            <button class="hero-button"><a href="<?= $base_path ?>modules/menu.php">Explore Our Flavors</a></button>
         </div>
         <!-- Animated ice cream icons -->
         <div class="floating-icons">
@@ -141,6 +141,32 @@ include 'header.php';
 
 <!-- Include external JavaScript file -->
 <script src="js/app.js"></script>
+
+<!-- Add scroll to top functionality -->
+<script>
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Show or hide the button based on scroll position
+window.addEventListener('scroll', function() {
+    var scrollBtn = document.getElementById('scrollToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollBtn.style.display = "block";
+    } else {
+        scrollBtn.style.display = "none";
+    }
+});
+
+// Add click event listener to the button
+document.getElementById('scrollToTop').addEventListener('click', function(e) {
+    e.preventDefault();
+    scrollToTop();
+});
+</script>
 
 <?php
 include 'footer.php';

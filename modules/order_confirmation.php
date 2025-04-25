@@ -111,7 +111,7 @@ if ($payment_intent_id) {
     
     .btn-primary {
         background-color: #ff4081;
-        color: white;
+        color: white !important;
         border: none;
         padding: 12px 25px;
         border-radius: 25px;
