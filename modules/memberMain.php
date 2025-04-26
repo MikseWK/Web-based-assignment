@@ -8,7 +8,6 @@ $_title = 'Member Maintenance';
 $fields = [
     'id'         => 'Id',
     'name'       => 'Name',
-    'gender'     => 'Gender',
     'phoneNumber' => 'PhoneNumber',
 ];
 
@@ -20,8 +19,16 @@ in_array($dir, ['asc', 'desc']) || $dir = 'asc';
 
 $page = req('page', 1);
 
+$search_field = req('search_field');
+$search_value = req('search_value');
+
+$where_clause = '';
+if ($search_field && $search_value) {
+    $where_clause = "WHERE $search_field LIKE '%$search_value%'";
+}
+
 require_once '../lib/SimplePager.php';
-$p = new SimplePager("SELECT * FROM Customer ORDER BY $sort $dir", [], 10, $page);
+$p = new SimplePager("SELECT * FROM Customer $where_clause ORDER BY $sort $dir", [], 10, $page);
 $arr = $p->result;
 
 // ----------------------------------------------------------------------------
@@ -38,6 +45,20 @@ include '../header.php';
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<form method="post" class="form">
+    <label for="search_field">Search by:</label>
+    <select name="search_field" id="search_field">
+        <?php foreach ($fields as $key => $value): ?>
+            <?php if ($key): ?>
+                <option value="<?= $key ?>" <?= $key == $search_field ? 'selected' : '' ?>><?= $value ?></option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </select>
+    <input type="text" name="search_value" value="<?= htmlspecialchars($search_value) ?>">
+    <button type="submit">Search</button>
+</form>
+
     <p class="pagination">
         <?= $p->count ?> of <?= $p->item_count ?> record(s) |
         Page <?= $p->page ?> of <?= $p->page_count ?>
@@ -52,7 +73,6 @@ include '../header.php';
         <tr>
             <td><?= $s->id ?></td>
             <td><?= $s->name ?></td>
-            <td><?= $s->gender ?></td>
             <td><?= $s->phoneNumber ?></td>
         </tr>
         <?php endforeach ?>

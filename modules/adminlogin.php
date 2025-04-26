@@ -27,16 +27,14 @@ if (is_post()) {
             WHERE email = ? AND password = SHA1(?)
         ');
         $stm->execute([$email, $password]);
-        $u = $stm->fetch(PDO::FETCH_ASSOC); // Explicitly fetch as associative array
+        $u = $stm->fetch();
 
         if ($u) {
             $_SESSION['role'] = 'Admin';
             $_SESSION['logged_in'] = true;
-            $_SESSION['id'] = $u['id']; // Store admin ID in session
-            $_SESSION['name'] = $u['name']; // Store admin name in session
-            $_SESSION['email'] = $u['email']; // Store admin email in session
             $_SESSION['message'] = 'You have logged in successfully';
-            login($u,'/modules/adminProfile.php'); // Redirect to admin profile page
+            $_SESSION['user'] = $u;
+            redirect('/modules/adminProfile.php');
         }
         else {
             $_err['password'] = 'Email or password not matched';
@@ -77,15 +75,10 @@ $_title = 'Login';
                     <div class="dropdown-content">
                         <a href="/modules/customerlogin.php">Customer Login</a>
                         <a href="/modules/adminlogin.php">Admin Login</a>
-                        <a href="/modules/register.php">Register</a>
                     </div>
                 </div>
     </header>
     <div class="login-container">
-        <div class="login-banner">
-            <img src="/assets/images/loginIcon" alt="Login Banner" >
-        </div>
-
         <div class="login-form-container">
             <div class="login-tabs">
                 <div class="login-tab-active">Log In</div>
@@ -93,8 +86,7 @@ $_title = 'Login';
             </div>
 
             <form method="POST">
-                <input type="text" name="email" class="login-input" placeholder="Phone number 
-                / Username / Email" value="<?= htmlspecialchars(isset($_POST['email']) ? $_POST['email'] : '') ?>">
+                <input type="text" name="email" class="login-input" placeholder="Email" value="<?= htmlspecialchars(isset($_POST['email']) ? $_POST['email'] : '') ?>">
                 <?php if(isset($_err['email'])): ?>
                     <div class="error-message"><?= $_err['email']?></div>
                 <?php endif; ?>
@@ -107,7 +99,7 @@ $_title = 'Login';
                 <button type="submit" class="login-button">Log In</button>
 
                 <div class="login-options">
-                    <a href="#">Forgot Password</a>
+                    <a href="/modules/forgot_password.php">Forgot Password</a>
                     <a href="#">Log in with Phone Number</a>
                 </div>
                 

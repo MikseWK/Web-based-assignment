@@ -29,7 +29,7 @@ if ($conn->connect_error) {
 
 // Get admin data from database - use id from session if available, otherwise use a default value
 // Change this line to use the correct session variable
-$adminId = $_SESSION['admin_id'] ?? $_SESSION['id'] ?? 1; // Try both possible session variables
+$adminId = $_user->id;
 // Remove debugging echo statement
 
 $query = "SELECT * FROM admin WHERE id = ?";
@@ -321,6 +321,58 @@ $(document).ready(function() {
     if ($('#adminAddForm').is(':visible')) {
         $('#adminAddBtn').hide();
     }
+});
+
+$(document).ready(function() {
+    // Your existing code for Add Admin remains here
+    
+    // Add this new code for Edit functionality
+    $('.admin-edit-btn').on('click', function() {
+        if ($(this).is('[disabled]')) return;
+        
+        var adminId = $(this).data('id');
+        alert('Edit admin with ID: ' + adminId);
+        
+        // Here you would normally redirect to an edit page
+        window.location.href = 'editadmin.php?id=' + adminId;
+    });
+    
+    // Add this new code for Delete functionality
+    $('.admin-delete-btn').on('click', function() {
+        if ($(this).is('[disabled]')) return;
+        
+        var adminId = $(this).data('id');
+        var $button = $(this);
+        var $row = $button.closest('.admin-list-item');
+        
+        if (confirm('Are you sure you want to delete this administrator?')) {
+            // Send a request to delete the admin
+            $.ajax({
+                url: '../modules/deleteadmin.php',
+                type: 'POST',
+                data: {id: adminId},
+                dataType: 'json',
+                success: function(response) {
+                    console.log("Success response:", response);
+                    if (response && response.success) {
+                        // Remove the row from the table
+                        $row.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                        alert('Admin deleted successfully');
+                    } else {
+                        alert('Error: ' + (response ? response.message : 'Unknown error'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Error status:", status);
+                    console.log("Error thrown:", error);
+                    console.log("Response text:", xhr.responseText);
+                    alert('Error: Could not delete the administrator. Check console for details.');
+                }
+            });
+        }
+    });
 });
 </script>
 <?php include '../footer.php'; ?>

@@ -100,9 +100,16 @@ if (is_post()) { // part2: update
         // Delete photo + save photo
         // ** Only if a file is selected **
         if ($f) {
-            unlink("../photos/$photo"); //unlink and delete the old photo
-            $photo = save_photo($f, '../photos');   //save the new photo
-        }
+            unlink("../images/$photo"); //unlink and delete the old photo
+            // Genrate photo name to save
+            $photo = $name. '.jpg';
+
+            require_once '../lib/SimpleImage.php';
+            $img = new SimpleImage();
+            $img->fromFile($f->tmp_name)
+                ->resize(200, 200)
+                ->toFile("../images/$photo", 'image/jpeg');
+            }
         
         $stm = $_db->prepare('
             UPDATE product

@@ -156,7 +156,35 @@ include '../header.php';
             <a href="contact.php" class="cta-button">Find Our Stores</a>
         </div>
     </section>
+    <button id="scrollToTop" class="scroll-top-btn" style="animation: pulse 2s infinite;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 </main>
+
+<script>
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Show or hide the button based on scroll position
+window.addEventListener('scroll', function() {
+    var scrollBtn = document.getElementById('scrollToTop');
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scrollBtn.style.display = "block";
+    } else {
+        scrollBtn.style.display = "none";
+    }
+});
+
+// Add click event listener to the button
+document.getElementById('scrollToTop').addEventListener('click', function(e) {
+    e.preventDefault();
+    scrollToTop();
+});
+</script>
 
 <?php
 include '../footer.php';

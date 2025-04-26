@@ -15,10 +15,10 @@
         <div class="footer-section">
             <h3>Our Products</h3>
             <ul>
-                <li><a href="products.php?category=ice-cream">Ice Cream</a></li>
-                <li><a href="products.php?category=frozen-yogurt">Frozen Yogurt</a></li>
-                <li><a href="products.php?category=desserts">Desserts</a></li>
-                <li><a href="products.php?category=specials">Specials</a></li>
+                <li><a href="menu.php">Ice Cream</a></li>
+                <li><a href="menu.php">Cakes</a></li>
+                <li><a href="menu.php">Yogurt Ice Cream</a></li>
+                <li><a href="menu.php">Specials</a></li>
             </ul>
         </div>
         

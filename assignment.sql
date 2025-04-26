@@ -1,51 +1,36 @@
--- Character set setup
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Apr 24, 2025 at 03:59 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
 -- Database: `assignment`
+--
+CREATE DATABASE IF NOT EXISTS `assignment` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `assignment`;
 
--- 1. Base tables (no FKs)
-CREATE TABLE IF NOT EXISTS `product_categories` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `icecream_types` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--
+-- Table structure for table `admin`
+--
 
-CREATE TABLE IF NOT EXISTS `icecream_flavors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `addon` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `price` float NOT NULL,
-  `availability` varchar(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `admin` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
   `name` text NOT NULL,
   `password` text NOT NULL,
   `phoneNumber` text NOT NULL,
@@ -53,411 +38,365 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `role` varchar(50) DEFAULT 'Administrator',
   `profile_picture` varchar(255) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
-  `session_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `session_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `customer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` char(4) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer`
+--
+
+CREATE TABLE `customer` (
+  `id` int(11) NOT NULL,
   `name` text NOT NULL,
+  `gender` varchar(1) NOT NULL,
   `password` text NOT NULL,
   `phoneNumber` text NOT NULL,
-  `email` text NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `profile_picture` varchar(100) NOT NULL,
   `birthday` date NOT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
-  `session_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `email_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `verification_token` varchar(64) NOT NULL,
+  `token_expires` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `servechoice` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `additional_price` float NOT NULL,
-  `availability` varchar(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--
+-- Dumping data for table `customer`
+--
 
-CREATE TABLE IF NOT EXISTS `tag` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `availability` varchar(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `customer` (`id`, `name`, `gender`, `password`, `phoneNumber`, `email`, `profile_picture`, `birthday`, `email_verified`, `verification_token`, `token_expires`) VALUES
+(1, 'haha', '', '1c7f4e266fefa295c5ae90317aaa0e7c6931e7d7', '0154154151', 'liewchoonfei22@gmail.com', '', '0000-00-00', 1, '', '0000-00-00 00:00:00');
 
-CREATE TABLE IF NOT EXISTS `member` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `emailAddress` varchar(50) NOT NULL,
-  `password` varchar(15) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `discount_vouchers` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `code` VARCHAR(50) NOT NULL UNIQUE,
-  `discount_type` ENUM('percentage', 'fixed') NOT NULL,
-  `discount_value` DECIMAL(10,2) NOT NULL,
-  `min_purchase` DECIMAL(10,2) DEFAULT 0,
-  `valid_from` DATE NOT NULL,
-  `valid_to` DATE NOT NULL,
-  `is_active` BOOLEAN DEFAULT TRUE,
-  `usage_limit` INT NULL,
-  `usage_count` INT DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--
+-- Table structure for table `dashboard_stats`
+--
 
--- 2. Tables with simple FKs to base tables
-CREATE TABLE IF NOT EXISTS `product` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `description` TEXT NULL,
-  `price` DECIMAL(10,2) NOT NULL,
-  `photo` VARCHAR(255) NULL,
-  `stock` INT NOT NULL DEFAULT 0,
-  `availability` TINYINT(1) DEFAULT 1,
-  `category_id` INT(11) DEFAULT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`),
-  CONSTRAINT `product_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `icecream` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_id` int(11) NOT NULL,
-  `flavor_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `availability` char(1) NOT NULL DEFAULT 'Y',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `type_id` (`type_id`),
-  KEY `flavor_id` (`flavor_id`),
-  CONSTRAINT `icecream_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `icecream_types` (`id`),
-  CONSTRAINT `icecream_ibfk_2` FOREIGN KEY (`flavor_id`) REFERENCES `icecream_flavors` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `discount` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `discount_name` varchar(50) NOT NULL,
-  `discount_percentage` int(3) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `customer_id` (`customer_id`),
-  CONSTRAINT `discount_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `customer_registration_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` int(11) NOT NULL,
-  `registration_date` date NOT NULL,
-  `source` varchar(50) DEFAULT 'website',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `fk_customer_reg_customer` (`customer_id`),
-  CONSTRAINT `fk_customer_reg_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `taglist` (
-  `icecream_id` int(11) NOT NULL,
-  `tag_id` int(11) NOT NULL,
-  `is_active` varchar(1) NOT NULL,
-  PRIMARY KEY (`icecream_id`, `tag_id`),
-  KEY `tag_id` (`tag_id`),
-  CONSTRAINT `taglist_ibfk_1` FOREIGN KEY (`icecream_id`) REFERENCES `icecream` (`id`),
-  CONSTRAINT `taglist_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 3. Tables with complex FKs or dependent on above tables
-CREATE TABLE `orders` ( 
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL, 
-  `count` int(11) NOT NULL DEFAULT 0, 
-  `total` decimal(10,2) NOT NULL DEFAULT 0.00, 
-  `datetime` datetime NOT NULL DEFAULT current_timestamp(), 
-  `status` enum('Success','Fail','Pending','Expired') NOT NULL DEFAULT 'Pending',
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT=22; 
-
-INSERT INTO `orders` (`id`, `user_id`, `count`, `total`, `datetime`, `status`) VALUES 
-(21, 4, 6, 38.94, '2025-04-23 10:37:00', 'Success'); 
-
--- CREATE TABLE IF NOT EXISTS `orderrecord` (
---   `id` int(11) NOT NULL AUTO_INCREMENT,
---   `date` date NOT NULL,
---   `amount` float NOT NULL,
---   `customer_id` int(11) NOT NULL,
---   `status` varchar(50) DEFAULT 'pending',
---   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
---   PRIMARY KEY (`id`),
---   KEY `customer_id` (`customer_id`),
---   CONSTRAINT `orderrecord_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `payment` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `order_id` INT(11) NOT NULL,
-  `payment_date` DATETIME NOT NULL,
-  `payment_method` VARCHAR(50) NOT NULL,
-  `amount` DECIMAL(10,2) NOT NULL,
-  `status` ENUM('pending', 'completed', 'failed', 'refunded') NOT NULL DEFAULT 'pending',
-  `transaction_id` VARCHAR(255) NULL,
-  `discount_id` INT(11) NULL,
-  `discount_amount` DECIMAL(10,2) DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`),
-  KEY `discount_id` (`discount_id`),
-  CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `payment_ibfk_2` FOREIGN KEY (`discount_id`) REFERENCES `discount` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE `orderitem` ( 
-  `order_id` int(11) NOT NULL, 
-  `product_id` char(4) NOT NULL, 
-  `quantity` int(11) NOT NULL, 
-  `subtotal` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`order_id`,`product_id`),
-  KEY `product_id` (`product_id`),
-  CONSTRAINT `orderitem_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `orderitem_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-INSERT INTO `orderitem` (`order_id`, `product_id`, `quantity`, `subtotal`) VALUES 
-(21, 'P001', 2, 11.98), 
-(21, 'P002', 1, 5.99), 
-(21, 'P004', 1, 6.99), 
-(21, 'P005', 2, 13.98);
-CREATE TABLE IF NOT EXISTS `orderlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `quantity` int(100) NOT NULL,
-  `addon` varchar(100) NOT NULL,
-  `specialinsturction` varchar(100) NOT NULL,
-  `subtotal` float NOT NULL,
-  `icecream_id` int(11) NOT NULL,
-  `addon_id` int(11) NOT NULL,
-  `serve_choice_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `addon_id` (`addon_id`),
-  KEY `icecream_id` (`icecream_id`),
-  KEY `serve_choice_id` (`serve_choice_id`),
-  KEY `order_id` (`order_id`),
-  CONSTRAINT `orderlist_ibfk_1` FOREIGN KEY (`addon_id`) REFERENCES `addon` (`id`),
-  CONSTRAINT `orderlist_ibfk_2` FOREIGN KEY (`icecream_id`) REFERENCES `icecream` (`id`),
-  CONSTRAINT `orderlist_ibfk_3` FOREIGN KEY (`serve_choice_id`) REFERENCES `servechoice` (`id`),
-  CONSTRAINT `orderlist_ibfk_4` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE `cart` ( 
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL, 
-  `product_id` char(4) NOT NULL, 
-  `quantity` int(11) NOT NULL DEFAULT 1, 
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(), 
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_product` (`user_id`,`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT=115; 
-
-INSERT INTO `cart` (`id`, `user_id`, `product_id`, `quantity`, `created_at`, `updated_at`) VALUES 
-(48, 12, 'P003', 9, '2025-04-15 18:46:21', '2025-04-15 20:12:46'), 
-(49, 12, 'P002', 11, '2025-04-15 18:46:22', '2025-04-15 20:12:47'), 
-(51, 12, 'P005', 5, '2025-04-15 18:46:49', '2025-04-15 20:12:49'), 
-(52, 12, 'P001', 8, '2025-04-15 18:53:31', '2025-04-15 20:12:48'), 
-(53, 12, 'P004', 1, '2025-04-15 20:12:49', '2025-04-15 20:12:49'), 
-(54, 12, 'P008', 1, '2025-04-15 20:12:51', '2025-04-15 20:12:51'), 
-(55, 12, 'P007', 1, '2025-04-15 20:12:52', '2025-04-15 20:12:52'), 
-(107, 11, 'P002', 9, '2025-04-20 18:48:20', '2025-04-20 19:44:20'), 
-(108, 11, 'P001', 3, '2025-04-20 18:48:29', '2025-04-20 19:44:23'), 
-(109, 11, 'P019', 1, '2025-04-20 18:48:39', '2025-04-20 18:48:39'), 
-(110, 11, 'P018', 1, '2025-04-20 18:48:59', '2025-04-20 18:48:59'), 
-(111, 11, 'P016', 1, '2025-04-20 19:33:02', '2025-04-20 19:33:02'), 
-(112, 11, 'P015', 1, '2025-04-20 19:33:06', '2025-04-20 19:33:06'), 
-(113, 11, 'P003', 1, '2025-04-20 19:44:21', '2025-04-20 19:44:21'), 
-(114, 11, 'P004', 1, '2025-04-20 19:44:25', '2025-04-20 19:44:25'); 
-
-
-CREATE TABLE IF NOT EXISTS `monthly_sales` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `month` int(2) NOT NULL,
-  `year` int(4) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  `total_sales` decimal(10,2) DEFAULT 0.00,
-  `units_sold` int(11) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `month_year_product` (`month`, `year`, `product_id`),
-  KEY `fk_monthly_sales_product` (`product_id`),
-  KEY `fk_monthly_sales_category` (`category_id`),
-  CONSTRAINT `fk_monthly_sales_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  CONSTRAINT `fk_monthly_sales_category` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- 4. Tables with no foreign keys (independent tables)
-CREATE TABLE IF NOT EXISTS `contact_messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `subject` varchar(200) NOT NULL,
-  `message` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(20) DEFAULT 'unread',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `dashboard_stats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `dashboard_stats` (
+  `id` int(11) NOT NULL,
   `stat_date` date NOT NULL,
-  `new_customer` int(11) DEFAULT 0,
+  `new_customers` int(11) DEFAULT 0,
   `total_sales` decimal(10,2) DEFAULT 0.00,
   `new_orders` int(11) DEFAULT 0,
   `total_products` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `stat_date` (`stat_date`)
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 5. Insert data into tables (in correct order)
--- First insert into base tables with no dependencies
-INSERT INTO `product_categories` (`name`, `description`) VALUES
-('Ice Cream', 'All ice cream products'),
-('Cakes', 'All cake products'),
-('Beverages', 'All drink products'),
-('Toppings', 'All topping products');
+-- --------------------------------------------------------
 
-INSERT INTO `icecream_types` (`name`, `description`) VALUES
-('Regular', 'Standard ice cream with regular fat content'),
-('Premium', 'Rich and creamy ice cream with higher fat content'),
-('Low-fat', 'Ice cream with reduced fat content'),
-('Dairy-free', 'Ice cream made without dairy products'),
-('Sorbet', 'Fruit-based frozen dessert without dairy');
+--
+-- Table structure for table `monthly_sales`
+--
 
-INSERT INTO `icecream_flavors` (`name`, `description`) VALUES
-('Vanilla', 'Classic vanilla flavor'),
-('Chocolate', 'Rich chocolate flavor'),
-('Strawberry', 'Sweet strawberry flavor'),
-('Mint Chocolate Chip', 'Refreshing mint with chocolate chips'),
-('Cookies and Cream', 'Vanilla with cookie pieces'),
-('Butter Pecan', 'Buttery flavor with pecan nuts'),
-('Coffee', 'Coffee-infused ice cream'),
-('Rocky Road', 'Chocolate with marshmallows and nuts'),
-('Pistachio', 'Nutty pistachio flavor'),
-('Neapolitan', 'Combination of vanilla, chocolate, and strawberry');
+CREATE TABLE `monthly_sales` (
+  `id` int(11) NOT NULL,
+  `month` int(2) NOT NULL,
+  `year` int(4) NOT NULL,
+  `product_id` char(4) DEFAULT NULL,
+  `total_sales` decimal(10,2) DEFAULT 0.00,
+  `units_sold` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `customer` (`name`, `password`, `phoneNumber`, `email`, `birthday`) VALUES
-('John Smith', SHA1('password123'), '0123456789', 'john@example.com', '1990-05-15'),
-('Jane Doe', SHA1('password123'), '0123456788', 'jane@example.com', '1992-08-22'),
-('Mike Johnson', SHA1('password123'), '0123456787', 'mike@example.com', '1985-11-10'),
-('Sarah Williams', SHA1('password123'), '0123456786', 'sarah@example.com', '1995-03-28'),
-('David Brown', SHA1('password123'), '0123456785', 'david@example.com', '1988-07-14');
+-- --------------------------------------------------------
 
--- Then insert into tables that depend on the base tables
-INSERT INTO `product` (`name`, `description`, `price`, `photo`, `category_id`) VALUES
-('Vanilla Ice Cream', 'Classic vanilla ice cream made with real vanilla beans', 4.99, 'vanilla.jpg', 1),
-('Chocolate Ice Cream', 'Rich chocolate ice cream made with premium cocoa', 5.99, 'chocolate.jpg', 1),
-('Strawberry Ice Cream', 'Creamy strawberry ice cream with real fruit pieces', 5.99, 'strawberry.jpg', 1),
-('Mint Chocolate Chip', 'Refreshing mint ice cream with chocolate chips', 6.99, 'mint-choc.jpg', 1),
-('Cookies and Cream', 'Vanilla ice cream with chocolate cookie pieces', 6.99, 'cookies-and-cream.jpg', 1),
-('Butter Pecan', 'Buttery ice cream with pecan nuts', 5.99, 'butter-pecan.jpg', 1),
-('Coffee Ice Cream', 'Coffee-infused ice cream', 5.99, 'coffee.jpg', 1),
-('Rocky Road', 'Chocolate ice cream with marshmallows and nuts', 6.99, 'rocky-road.jpg', 1),
-('Pistachio Ice Cream', 'Nutty pistachio flavored ice cream', 5.99, 'pistachio.jpg', 1),
-('Neapolitan Ice Cream', 'Combination of vanilla, chocolate, and strawberry', 5.99, 'neapolitan.jpg', 1);
+--
+-- Table structure for table `orderitem`
+--
 
-INSERT INTO `icecream` (`type_id`, `flavor_id`, `name`, `price`, `availability`) VALUES
-(1, 1, 'Classic Vanilla', 4.99, 'Y'),
-(1, 2, 'Classic Chocolate', 4.99, 'Y'),
-(1, 3, 'Classic Strawberry', 4.99, 'Y'),
-(2, 4, 'Premium Mint Chocolate Chip', 6.99, 'Y'),
-(2, 5, 'Premium Cookies and Cream', 6.99, 'Y'),
-(3, 1, 'Low-fat Vanilla', 5.49, 'Y'),
-(4, 7, 'Dairy-free Coffee', 7.99, 'Y'),
-(5, 3, 'Strawberry Sorbet', 5.99, 'Y'),
-(2, 8, 'Premium Rocky Road', 7.49, 'Y'),
-(1, 9, 'Classic Pistachio', 5.99, 'Y');
+CREATE TABLE `orderitem` (
+  `order_id` int(11) NOT NULL,
+  `product_id` char(4) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `customer_registration_log` (`customer_id`, `registration_date`, `source`) VALUES
-(1, CURDATE(), 'website'),
-(2, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 'mobile_app'),
-(3, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'website'),
-(4, DATE_SUB(CURDATE(), INTERVAL 3 DAY), 'website'),
-(5, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 'mobile_app');
+-- --------------------------------------------------------
 
--- Then insert into tables that depend on the previous tables
-INSERT INTO `orders` (`customer_id`, `order_date`, `total_amount`, `status`, `payment_method`) VALUES
-(1, NOW(), 25.99, 'completed', 'credit_card'),
-(2, DATE_SUB(NOW(), INTERVAL 1 HOUR), 18.50, 'completed', 'credit_card'),
-(3, DATE_SUB(NOW(), INTERVAL 3 HOUR), 32.75, 'processing', 'paypal'),
-(4, DATE_SUB(NOW(), INTERVAL 5 HOUR), 15.25, 'completed', 'credit_card'),
-(1, DATE_SUB(NOW(), INTERVAL 1 DAY), 22.50, 'completed', 'credit_card'),
-(2, DATE_SUB(NOW(), INTERVAL 1 DAY), 19.99, 'completed', 'paypal'),
-(3, DATE_SUB(NOW(), INTERVAL 2 DAY), 28.75, 'completed', 'credit_card'),
-(5, DATE_SUB(NOW(), INTERVAL 2 DAY), 35.50, 'completed', 'credit_card'),
-(4, DATE_SUB(NOW(), INTERVAL 3 DAY), 12.99, 'completed', 'paypal'),
-(5, DATE_SUB(NOW(), INTERVAL 4 DAY), 24.50, 'completed', 'credit_card');
+--
+-- Table structure for table `orders`
+--
 
-INSERT INTO `order_items` (`order_id`, `product_id`, `quantity`, `unit_price`, `subtotal`) VALUES
-(1, 1, 2, 4.99, 9.98),
-(1, 3, 1, 5.99, 5.99),
-(1, 4, 1, 6.99, 6.99),
-(2, 2, 2, 5.99, 11.98),
-(2, 4, 1, 6.99, 6.99),
-(3, 1, 1, 4.99, 4.99),
-(3, 2, 2, 5.99, 11.98),
-(3, 3, 1, 5.99, 5.99),
-(3, 4, 1, 6.99, 6.99),
-(4, 1, 3, 4.99, 14.97),
-(5, 2, 2, 5.99, 11.98),
-(5, 3, 1, 5.99, 5.99),
-(6, 4, 2, 6.99, 13.98),
-(7, 1, 1, 4.99, 4.99),
-(7, 2, 2, 5.99, 11.98),
-(7, 3, 1, 5.99, 5.99),
-(8, 3, 3, 5.99, 17.97),
-(8, 4, 2, 6.99, 13.98),
-(9, 1, 2, 4.99, 9.98),
-(10, 2, 2, 5.99, 11.98),
-(10, 4, 1, 6.99, 6.99);
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT 0,
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` enum('Success','Fail','Pending','Expired') NOT NULL DEFAULT 'Pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `monthly_sales` (`month`, `year`, `product_id`, `category_id`, `total_sales`, `units_sold`) VALUES
-(MONTH(CURDATE()), YEAR(CURDATE()), NULL, 1, 8500.50, 1400),
-(MONTH(CURDATE()), YEAR(CURDATE()), NULL, 2, 5200.75, 650),
-(MONTH(CURDATE()), YEAR(CURDATE()), NULL, 3, 2100.25, 420),
-(MONTH(CURDATE()), YEAR(CURDATE()), NULL, 4, 1500.00, 300);
+-- --------------------------------------------------------
 
--- Additional monthly sales data
-INSERT INTO `monthly_sales` (`month`, `year`, `product_id`, `category_id`, `total_sales`, `units_sold`) VALUES
-(MONTH(CURDATE()), YEAR(CURDATE()), 1, 1, 2500.75, 500),
-(MONTH(CURDATE()), YEAR(CURDATE()), 2, 1, 1800.50, 300),
-(MONTH(CURDATE()), YEAR(CURDATE()), 3, 1, 1200.25, 200),
-(MONTH(CURDATE()), YEAR(CURDATE()), 4, 1, 3000.00, 400)
-ON DUPLICATE KEY UPDATE
-  total_sales = VALUES(total_sales),
-  units_sold = VALUES(units_sold),
-  updated_at = CURRENT_TIMESTAMP;
+--
+-- Table structure for table `password_resets`
+--
 
--- Dashboard stats
-INSERT INTO `dashboard_stats` (`stat_date`, `new_customer`, `total_sales`, `new_orders`, `total_products`) VALUES
-(DATE_SUB(CURDATE(), INTERVAL 3 DAY), 4, 1125.50, 10, 24),
-(DATE_SUB(CURDATE(), INTERVAL 4 DAY), 6, 1350.25, 13, 24),
-(DATE_SUB(CURDATE(), INTERVAL 5 DAY), 2, 950.75, 7, 23),
-(DATE_SUB(CURDATE(), INTERVAL 6 DAY), 5, 1425.00, 11, 23)
-ON DUPLICATE KEY UPDATE 
-    `new_customer` = VALUES(`new_customer`),
-    `total_sales` = VALUES(`total_sales`),
-    `new_orders` = VALUES(`new_orders`),
-    `total_products` = VALUES(`total_products`),
-    `updated_at` = CURRENT_TIMESTAMP();
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Create stored procedure
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `transaction_id` varchar(255) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `payment_status` enum('Success','Fail') NOT NULL DEFAULT 'Fail',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE `product` (
+  `id` char(4) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  `Flavour` varchar(20) NOT NULL,
+  `price` decimal(4,2) NOT NULL,
+  `photo` varchar(100) NOT NULL,
+  `Description` varchar(200) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `availability` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `name`, `category`, `Flavour`, `price`, `photo`, `Description`, `quantity`, `availability`) VALUES
+('P001', 'Classic Chocolate', 'Classic', 'Chocolate', 5.99, 'Classic Chocolate.jpg', 'Deep, cocoa-forward flavor made with Dutch-processed chocolate for a bittersweet richness.\'', 100, 0),
+('P002', 'Classic Vanilla', 'Classic', 'Vanilla', 5.99, 'classicvanilla.jpg', 'A timeless classic made with Madagascar vanilla beans, offering a creamy, floral sweetness with tiny black speckles of real vanilla.', 0, 0),
+('P003', 'Classic Strawberry', 'Classic', 'Strawberry', 5.99, 'classicstrawberry.jpg', 'Made with ripe strawberries for a bright, fruity sweetness balanced by creamy dairy.', 0, 0),
+('P004', 'Classic Mint Chocolate', 'Classic', 'Chocolate', 6.99, 'classicmintchocolatechip.jpg', 'Cool peppermint ice cream studded with dark chocolate shavings and crunchy chocolate bits topping.', 0, 0),
+('P005', 'Classic Cookies N Cream', 'Classic', 'Cookies', 6.99, 'classiccookiesncream.jpg', 'Vanilla base packed with crushed Oreo® cookies for a crunchy, chocolaty contrast.', 0, 0),
+('P006', 'Classic Coffee', 'Classic', 'Coffee', 6.99, 'classiccoffee.jpg', 'Made with cold-brewed espresso or dark roast coffee for a bold, aromatic kick.', 0, 0),
+('P007', 'Gelato Chocolate', 'Gelato', 'Chocolate', 9.99, 'gelatochocolate.jpg', 'Made with high-quality cocoa or melted chocolate, it has a velvety texture and a deep, indulgent flavor.', 0, 0),
+('P008', 'Gelato Salted Caramel', 'Gelato', 'Caramel', 10.99, 'gelatosaltedcaramel.jpg', 'Buttery caramel gelato with a hint of sea salt.', 0, 0),
+('P009', 'Gelato Pistachio', 'Gelato', 'Pistachio', 12.99, 'gelatopistachio.jpg', 'Made with Sicilian pistachios, giving it a nutty, slightly salty depth.\r\n\r\n', 0, 0),
+('P010', 'Gelato Hazelnut', 'Gelato', 'Hazelnut', 10.99, 'gelatohazelnut.jpg', 'Roasted Piedmont hazelnuts blended into a Nutella-like richness.', 0, 0),
+('P011', 'Gelato Coffee', 'Gelato', 'Coffee', 11.99, 'gelatocoffee.jpg', 'Smooth and velvety, this Italian-style coffee gelato blends rich espresso or strong coffee into a creamy base.', 0, 0),
+('P012', 'Matcha Ice Cream Cake', 'Cake', 'Matcha', 19.99, 'cakematcha.jpg', 'A dreamy dessert combining layers of creamy matcha green tea ice cream with a buttery biscuit base.', 0, 0),
+('P013', 'Chocolate Ice Cream Cake', 'Cake', 'Chocolate', 17.99, 'cakechocolate.jpg', 'A decadent dessert with layers of rich, creamy chocolate ice cream and moist chocolate cake.', 0, 0),
+('P014', 'Mixed Berries Ice Cream Cake', 'Cake', 'Fruits', 18.99, 'cakeberries.jpg', 'A refreshing, fruity delight with layers of creamy vanilla or berry ice cream, swirls of mixed berries.', 0, 0),
+('P015', 'Yogurt Vanilla', 'Yogurt', 'Vanilla', 12.99, 'yogurtvanilla.jpg', 'Creamy, tangy, and lightly sweet, this vanilla ice cream is made with rich yogurt for a refreshing twist.', 0, 0),
+('P016', 'Yogurt Strawberry', 'Yogurt', 'Strawberry', 11.99, 'yogurtstrawberry.jpg', 'Creamy and bursting with fresh strawberry flavor, this frozen treat blends rich yogurt with sweet strawberry purée or swirls.', 0, 0),
+('P017', 'Yogurt Matcha', 'Yogurt', 'Matcha', 14.99, 'yogurtmatcha.jpg', 'A creamy, tangy-sweet fusion of rich yogurt and vibrant matcha green tea.', 0, 0),
+('P018', 'Yogurt Chocolate', 'Yogurt', 'Chocolate', 12.99, 'yogurtchocolate.jpg', 'This creamy treat blends deep cocoa or melted chocolate into luscious yogurt for a lighter yet decadent dessert.', 0, 0),
+('P019', 'Peach Sorbet', 'Sorbet', 'Fruits', 7.99, 'sorbetpeach.jpg', 'A vibrant, dairy-free delight bursting with juicy, sun-ripened peaches.', 0, 0),
+('P020', 'Mango Sorbet', 'Sorbet', 'Fruits', 7.99, 'sorbetmango.jpg', 'This luscious, dairy-free sorbet blends ripe mango purée with a splash of lime for a tropical, silky-smooth treat.', 0, 0),
+('P021', 'Lemon Sorbet', 'Sorbet', 'Fruits', 7.99, 'sorbetlemon.jpg', 'This dairy-free sorbet combines tangy lemon juice with a touch of honey sweetness, creating a silky taste.', 0, 0),
+('P022', 'Guava Sorbet', 'Sorbet', 'Fruits', 7.99, 'sorbetguava.jpg', 'Tropical, vibrant, and bursting with floral-sweet guava purée, this dairy-free sorbet is pure sunshine in every scoop.', 0, 0),
+('P023', 'Coconut Sorbet', 'Sorbet', 'Fruits', 7.99, 'sorbetcoconut.jpg', 'This dairy-free sorbet blends rich coconut milk with a hint of vanilla or lime for a silky, exotic treat.', 0, 0),
+('P024', 'Vanilla Soft Serve', 'Soft Serve', 'Vanilla', 4.99, 'softservevanilla.jpg', 'This classic soft serve swirls sweet vanilla bean goodness into a light, velvety texture that melts perfectly on your tongue.', 0, 0),
+('P025', 'Matcha Soft Serve', 'Soft Serve', 'Matcha', 4.99, 'softservematcha.jpg', 'This Japanese-inspired soft serve swirls premium matcha green tea into a creamy, subtly sweet base.', 0, 0),
+('P026', 'Chocolate Soft Serve', 'Soft Serve', 'Chocolate', 4.99, 'softservechocolate.png', 'This decadent soft serve swirls deep cocoa or melted chocolate into a creamy, dreamy texture.', 0, 0),
+('P027', 'Caramel Soft Serve', 'Soft Serve', 'Caramel', 4.99, 'softservecaramel.jpg', 'This golden soft serve swirls rich caramel into a velvety base, with a hint of sea salt for that perfect sweet-salty balance.', 0, 0),
+('P069', 'JackMa', 'Person', 'Cum', 99.99, 'JackMa.jpg', 'Jack Ma big big', 1, 1);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_product` (`user_id`,`product_id`),
+  ADD KEY `fk_cart_product` (`product_id`);
+
+--
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `dashboard_stats`
+--
+ALTER TABLE `dashboard_stats`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `stat_date` (`stat_date`);
+
+--
+-- Indexes for table `monthly_sales`
+--
+ALTER TABLE `monthly_sales`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `month_year_product` (`month`,`year`,`product_id`),
+  ADD KEY `fk_monthly_sales_product` (`product_id`);
+
+--
+-- Indexes for table `orderitem`
+--
+ALTER TABLE `orderitem`
+  ADD PRIMARY KEY (`order_id`,`product_id`),
+  ADD KEY `orderitem_ibfk_2` (`product_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_ibfk_1` (`user_id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `email` (`email`),
+  ADD KEY `token` (`token`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_payment_order` (`order_id`);
+
+--
+-- Indexes for table `product`
+--
+ALTER TABLE `product`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `dashboard_stats`
+--
+ALTER TABLE `dashboard_stats`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `monthly_sales`
+--
+ALTER TABLE `monthly_sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `fk_cart_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_cart_user` FOREIGN KEY (`user_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `monthly_sales`
+--
+ALTER TABLE `monthly_sales`
+  ADD CONSTRAINT `fk_monthly_sales_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`);
+
+--
+-- Constraints for table `orderitem`
+--
+ALTER TABLE `orderitem`
+  ADD CONSTRAINT `orderitem_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `orderitem_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD CONSTRAINT `fk_password_resets_customer` FOREIGN KEY (`email`) REFERENCES `customer` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `payment`
+--
+ALTER TABLE `payment`
+  ADD CONSTRAINT `fk_payment_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+
 DELIMITER //
 
 CREATE PROCEDURE update_dashboard_stats()
@@ -501,3 +440,7 @@ END //
 DELIMITER ;
 
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

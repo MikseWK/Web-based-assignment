@@ -109,7 +109,7 @@ if ($payment_intent_id) {
         color: #212529;
     }
     
-    .btn-primary {
+    a.btn-primary {
         background-color: #ff4081;
         color: white !important;
         border: none;
@@ -123,7 +123,7 @@ if ($payment_intent_id) {
         margin-top: 10px;
     }
     
-    .btn-primary:hover {
+    a.btn-primary:hover {
         background-color: #e91e63;
     }
 </style>
