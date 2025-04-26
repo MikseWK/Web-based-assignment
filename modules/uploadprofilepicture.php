@@ -1,4 +1,5 @@
 <?php
+include '../base.php';
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -10,8 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Include database connection
-require_once '../includes/db_connection.php';
+
 
 // Check if file was uploaded
 if (!isset($_FILES['profile_picture']) || $_FILES['profile_picture']['error'] !== UPLOAD_ERR_OK) {

@@ -1,7 +1,5 @@
 <?php
 require '../base.php';
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 // Create a direct database connection if $_db is not available
 if (!isset($_db) || $_db === null) {
@@ -11,60 +9,6 @@ if (!isset($_db) || $_db === null) {
     } catch (PDOException $e) {
         die('Database connection failed: ' . $e->getMessage());
     }
-}
-
-// Function to generate verification token
-function generateVerificationToken() {
-    return bin2hex(random_bytes(32)); // 64-character token
-}
-
-// Function to send verification email
-function sendVerificationEmail($email, $token) {
-    require '../vendor/autoload.php';
-    
-    $mail = new PHPMailer(true);
-    $verificationUrl = "http://localhost:8000/modules/verify.php?token=$token";
-    
-    try {
-        // Server settings for Gmail SMTP (Free)
-        $mail->isSMTP();
-        $mail->Host       = 'smtp.gmail.com';
-        $mail->SMTPAuth   = true;
-        $mail->Username   = 'frostdelights11@gmail.com'; // REPLACE WITH YOUR GMAIL
-        $mail->Password   = 'uycw rkyn oddy aukr'; // USE APP PASSWORD, NOT REGULAR PASSWORD
-        $mail->SMTPSecure = 'tls';
-        $mail->Port       = 587;
-
-        // Alternative: Use PHPMailer's local mail sending (doesn't require SMTP credentials)
-        // Comment out the above server settings and uncomment this if Gmail doesn't work
-        // $mail->isMail(); // Use PHP's mail() function instead of SMTP
-
-        $mail->setFrom('hello@frostdelights.com', 'Frost Delights');
-        $mail->addAddress($email);
-        
-        //Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Verify Your Email Address';
-        $mail->Body    = "Please click the following link to verify your email: <a href=\"$verificationUrl\">Verify Email</a>";
-        $mail->AltBody = "Please click the following link to verify your email: $verificationUrl";
-        
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
-        return $mail->ErrorInfo; // Return error message instead of false
-    }
-}
-
-// FOR DEVELOPMENT/TESTING ONLY: 
-// Alternative function that writes verification links to a file instead of sending emails
-function saveVerificationToFile($email, $token) {
-    $verificationUrl = "http://localhost:8000/verify.php?token=$token";
-    $content = date('Y-m-d H:i:s') . " - Email to: $email - Verification link: $verificationUrl\n";
-    
-    // Create a verification_links.txt file in the root directory
-    file_put_contents('../verification_links.txt', $content, FILE_APPEND);
-    return true;
 }
 
 if (is_post()) {
@@ -111,37 +55,14 @@ if (is_post()) {
     }
 
     // If no errors, insert into database
-    if (empty($_err)) {
-        $verificationToken = generateVerificationToken();
-        $tokenExpires = date('Y-m-d H:i:s', strtotime('+24 hours')); // Token expires in 24 hours
-        
-        try {
-            $stm = $_db->prepare('INSERT INTO customer (name, password, phoneNumber, email, verification_token, token_expires) 
-                                VALUES (?, SHA1(?), ?, ?, ?, ?)');
-            
-            if ($stm->execute([$name, $password, $phoneNumber, $email, $verificationToken, $tokenExpires])) {
-                // FOR DEVELOPMENT: Use file-based verification instead of email
-                if (saveVerificationToFile($email, $verificationToken)) {
-                    $_SESSION['message'] = 'Registration successful! Check the verification_links.txt file for your verification link.';
-                } else {
-                    $_SESSION['message'] = 'Registration successful, but verification link couldn\'t be saved.';
-                }
-                
-                // Uncomment below to use actual email sending when ready
-                $mailResult = sendVerificationEmail($email, $verificationToken);
-                if ($mailResult === true) {
-                    $_SESSION['message'] = 'Registration successful! Please check your email to verify your account.';
-                } else {
-                    $_SESSION['message'] = 'Registration successful, but email verification failed: ' . $mailResult;
-                }
-                
-                
-                redirect('/modules/customerlogin.php');
-            } else {
-                $_err['db'] = 'Database error. Please try again.';
-            }
-        } catch (PDOException $e) {
-            $_err['db'] = 'Database error: ' . $e->getMessage();
+    if (!$_err) {
+        $stm = $_db->prepare('INSERT INTO customer (name, password, phoneNumber, email) VALUES (?, SHA1(?), ?, ?)');
+
+        if ($stm->execute([$name, $password, $phoneNumber, $email])) {
+            $_SESSION['message'] = 'You have registered successfully';
+            redirect('/modules/customerlogin.php');
+        } else {
+            $_err['db'] = 'Database error. Please try again.';
         }
     }
 }

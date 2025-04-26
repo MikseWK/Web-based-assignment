@@ -197,6 +197,19 @@ CREATE TABLE `product` (
 -- Dumping data for table `product`
 --
 
+CREATE TABLE `customer_registration_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `registration_date` date NOT NULL,
+  `source` varchar(50) DEFAULT 'website',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `fk_registration_customer` (`customer_id`),
+  CONSTRAINT `fk_registration_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
 INSERT INTO `product` (`id`, `name`, `category`, `Flavour`, `price`, `photo`, `Description`, `quantity`, `availability`) VALUES
 ('P001', 'Classic Chocolate', 'Classic', 'Chocolate', 5.99, 'Classic Chocolate.jpg', 'Deep, cocoa-forward flavor made with Dutch-processed chocolate for a bittersweet richness.\'', 100, 0),
 ('P002', 'Classic Vanilla', 'Classic', 'Vanilla', 5.99, 'classicvanilla.jpg', 'A timeless classic made with Madagascar vanilla beans, offering a creamy, floral sweetness with tiny black speckles of real vanilla.', 0, 0),

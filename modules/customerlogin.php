@@ -1,58 +1,12 @@
 <?php
 require '../base.php';
 
-// Function to generate verification token (needs to be here too)
-function generateVerificationToken() {
-    return bin2hex(random_bytes(32)); // 64-character token
-}
-
-// Function that writes verification links to a file instead of sending emails
-function saveVerificationToFile($email, $token) {
-    $verificationUrl = "http://localhost:8000/verify.php?token=$token";
-    $content = date('Y-m-d H:i:s') . " - Email to: $email - Verification link: $verificationUrl\n";
-    
-    // Create a verification_links.txt file in the root directory
-    file_put_contents('../verification_links.txt', $content, FILE_APPEND);
-    return true;
-}
-
 // Only process login if it's a POST request
 if (is_post()) {
-    $email = req('email');
+    $email    = req('email');
     $password = req('password');
-    $resendVerification = req('resend_verification');
 
-    // Handle resend verification request
-    if ($resendVerification) {
-        try {
-            $stmt = $_db->prepare('SELECT id, email FROM customer WHERE email = ? AND email_verified = FALSE');
-            $stmt->execute([$email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($user) {
-                $newToken = generateVerificationToken();
-                $expires = date('Y-m-d H:i:s', strtotime('+24 hours'));
-                
-                $update = $_db->prepare('UPDATE customer SET verification_token = ?, token_expires = ? WHERE id = ?');
-                $update->execute([$newToken, $expires, $user['id']]);
-                
-                // Save verification link to file
-                if (saveVerificationToFile($user['email'], $newToken)) {
-                    $_SESSION['message'] = 'Verification link has been resent. Check the verification_links.txt file.';
-                } else {
-                    $_SESSION['message'] = 'Error generating verification link.';
-                }
-            } else {
-                $_SESSION['message'] = 'No unverified account found with that email or account is already verified.';
-            }
-        } catch (PDOException $e) {
-            $_SESSION['message'] = 'Database error: ' . $e->getMessage();
-        }
-        
-        redirect('/modules/customerlogin.php');
-    }
-
-    // Validate: email
+    // Validate: email  
     if ($email == '') {
         $_err['email'] = 'Email Required';
     }
@@ -82,12 +36,6 @@ if (is_post()) {
         $u = $stm->fetch();
 
         if ($u) {
-            // Check if email is verified
-            if ($u->email_verified == 0) {
-                $_SESSION['message'] = 'Please verify your email before logging in. <a href="customerlogin.php?email=' . urlencode($email) . '&resend_verification=1">Resend verification email</a>';
-                redirect('/modules/customerlogin.php');
-            }
-            
             $_SESSION['role'] = 'Customer';
             $_SESSION['logged_in'] = true;
             $_SESSION['message'] = 'You have logged in successfully';
@@ -138,14 +86,18 @@ $_title = 'Login';
     </header>
 
     <div class="login-container">
+        <!-- <div class="login-banner">
+            <img src="../assets/images/login-icon.png" alt="Login Banner">
+        </div> -->
+
         <div class="login-form-container">
             <div class="login-tabs">
                 <div class="login-tab-active">Log In</div>
             </div>
 
             <form method="POST">
-                <input type="text" name="email" class="login-input" placeholder="Email" 
-                    value="<?= isset($_GET['email']) ? htmlspecialchars($_GET['email']) : (isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '') ?>">
+                <input type="text" name="email" class="login-input" placeholder="Email " 
+                value="<?= htmlspecialchars(isset($_POST['email']) ? $_POST['email'] : '') ?>">
                 <?php if(isset($_err['email'])): ?>
                     <div class="error-message"><?= $_err['email']?></div>
                 <?php endif; ?>
@@ -183,3 +135,28 @@ $_title = 'Login';
     <?php include '../footer.php'; ?>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

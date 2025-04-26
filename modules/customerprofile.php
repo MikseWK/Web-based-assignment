@@ -6,6 +6,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+
+
 // Check if user is logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'Customer') {
     $_SESSION['message'] = 'Please log in to access your profile';
@@ -119,7 +121,7 @@ $userArray = (array)$user;
                 </div>
             </div>
             
-            <form id="profileForm" method="post" action="../actions/update_profile.php" class="profile-form" style="display: none;" enctype="multipart/form-data">
+            <form id="profileForm" method="post" action="updateprofile.php" class="profile-form" style="display: none;" enctype="multipart/form-data">
                 <div class="profile-user-photo">
                     <img id="profilePreview" src="<?= isset($userArray['profile_picture']) && !empty($userArray['profile_picture']) ? $userArray['profile_picture'] : '../assets/images/default-user.png' ?>" alt="Profile">
                     <div class="profile-photo-edit" id="editModePhotoEdit">
@@ -129,13 +131,13 @@ $userArray = (array)$user;
                 </div>
                 
                 <div class="profile-form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" class="profile-form-control" value="<?= $userArray['name'] ?? '' ?>" required>
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" class="profile-form-control" value="<?= $userArray['name'] ?? '' ?>" required>
                 </div>
                 
                 <div class="profile-form-group">
-                    <label for="dob">Date Of Birth</label>
-                    <input type="date" id="dob" name="dob" class="profile-form-control" value="<?= $userArray['dob'] ?? '' ?>">
+                    <label for="birthday">Date Of Birth</label>
+                    <input type="date" id="birthday" name="birthday" class="profile-form-control" value="<?= $userArray['birthday'] ?? '' ?>">
                 </div>
                 
                 <div class="profile-form-group">
@@ -153,13 +155,13 @@ $userArray = (array)$user;
                 </div>
                 
                 <div class="profile-form-group">
-                    <label for="phone">Phone Number</label>
+                    <label for="phoneNumber">Phone Number</label>
                     <div class="profile-phone-input">
                         <div class="profile-phone-flag">
                             <img src="../assets/images/turkey-flag.png" alt="Turkey">
                             <span>+90</span>
                         </div>
-                        <input type="tel" id="phone" name="phone" class="profile-form-control profile-phone-number" value="<?= $userArray['phone'] ?? '' ?>">
+                        <input type="tel" id="phoneNumber" name="phoneNumber" class="profile-form-control profile-phone-number" value="<?= $userArray['phoneNumber'] ?? '' ?>">
                     </div>
                 </div>
                 
@@ -176,6 +178,48 @@ $userArray = (array)$user;
         </div>
     </main>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editProfileBtn = document.getElementById('editProfileBtn');
+        const profileViewMode = document.getElementById('profileViewMode');
+        const profileForm = document.getElementById('profileForm');
+        const editModePhotoEdit = document.getElementById('editModePhotoEdit');
+        const profilePictureInput = document.getElementById('profilePictureInput');
+        const profilePreview = document.getElementById('profilePreview');
+
+        if(editProfileBtn) {
+            editProfileBtn.addEventListener('click', function() {
+                profileViewMode.style.display = 'none';
+                profileForm.style.display = 'block';
+            });
+        }
+
+        // Add this block to handle the camera icon click in edit mode
+        if(editModePhotoEdit && profilePictureInput) {
+            editModePhotoEdit.addEventListener('click', function() {
+                profilePictureInput.click();
+            });
+        }
+
+        // Optional: Show image preview when a file is selected
+        if(profilePictureInput && profilePreview) {
+            profilePictureInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePreview.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
 
 <!-- Include jQuery first -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
